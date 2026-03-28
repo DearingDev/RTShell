@@ -2,11 +2,12 @@
 	about_RTShell
 	
 SHORT DESCRIPTION
-	A short synopsis of RTShell
+	RTShell - PowerShell module for Request Tracker REST API v2
 
 LONG DESCRIPTION
-	A more detailed description of RTShell,
-	Should tell the user how to get started with this module.
+	A PowerShell module for interfacing with [Request Tracker (RT)](https://bestpractical.com/rt) 
+	using its REST API v2 and API token authentication. Supports read operations, write operations 
+	(tickets, replies, comments, attachments), and a response template system for standardized communications.
 	
 KEYWORDS
-	module development debugging
+	Request Tracker RT ITSM
