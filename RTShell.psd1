@@ -24,7 +24,7 @@
 	PowerShellVersion = '5.1'
 	
 	# Modules that must be imported into the global environment prior to importing this module
-	RequiredModules = @(@{ ModuleName='Microsoft.PowerShell.SecretManagement' })
+	RequiredModules = @('Microsoft.PowerShell.SecretManagement')
 	
 	# Assemblies that must be loaded prior to importing this module
 	# RequiredAssemblies = @('bin\RTShell.dll')
