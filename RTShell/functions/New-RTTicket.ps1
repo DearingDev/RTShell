@@ -56,8 +56,16 @@
     .PARAMETER PassThru
         Return the newly created ticket object.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
         New-RTTicket -Queue 'HelpDesk' -Subject 'VPN not connecting' -Requestor 'jsmith@example.com'
+
+        Create a ticket with minimal required parameters.
 
     .EXAMPLE
         New-RTTicket -Queue 'HelpDesk' `
@@ -67,18 +75,22 @@
                      -Priority 50 `
                      -Body "Please set up accounts for new starter Jane Doe starting Monday."
 
+        Create a ticket with owner assignment, priority, and initial body text.
+
     .EXAMPLE
-        # With custom fields
         New-RTTicket -Queue 'Network' `
                      -Subject 'Switch port flapping' `
                      -Requestor 'noc@example.com' `
                      -CustomFields @{ 'ServiceCategory' = 'Network'; 'Impact' = 'High' } `
                      -PassThru
 
+        Create a ticket with custom field values and return the new ticket object.
+
     .EXAMPLE
-        # Scripted creation piping result to Add-RTTicketReply
         New-RTTicket -Queue 'HelpDesk' -Subject 'Password reset' -Requestor 'user@example.com' -Force -PassThru |
             Add-RTTicketReply -TemplateName 'password-reset' -Force
+
+        Create a ticket and immediately send a templated reply in a script.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.

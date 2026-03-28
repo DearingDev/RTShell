@@ -24,16 +24,27 @@
     .PARAMETER PassThru
         Return the updated ticket object after a successful update.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
         Set-RTTicketPriority -Id 12345 -Priority 80
+
+        Set a ticket priority with confirmation prompt.
 
     .EXAMPLE
         Set-RTTicketPriority -Id 12345 -Priority 100 -Force
 
+        Set a ticket priority without confirmation.
+
     .EXAMPLE
-        # Elevate priority on all stalled tickets in a queue
         Search-RTTicket -Queue 'HelpDesk' -Status stalled |
             Set-RTTicketPriority -Priority 75 -Force
+
+        Elevate priority on all stalled tickets in a queue.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.

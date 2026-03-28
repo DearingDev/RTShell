@@ -48,8 +48,9 @@
     .OUTPUTS
         [string] The resolved text with substitutions applied.
 	.EXAMPLE
-		# Resolve tokens in template "followup" against ticket #12345, prompting for any undeclared tokens
 		Get-RTTicket -Id 12345 | Resolve-RTTemplate -TemplateName 'followup' -Interactive
+
+		Resolve tokens in template "followup" against ticket #12345, prompting for any undeclared tokens.
     .NOTES
         Token names are case-insensitive. Leading/trailing whitespace inside
         braces is ignored, so {{ TicketId }} and {{TicketId}} both match.

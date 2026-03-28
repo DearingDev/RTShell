@@ -23,14 +23,22 @@
     .EXAMPLE
         Get-RTTicket -Id 12345
 
+        Retrieve a single ticket by ID.
+
     .EXAMPLE
         Get-RTTicket -Id 100, 101, 102
+
+        Retrieve multiple tickets by passing an array of IDs.
 
     .EXAMPLE
         Search-RTTicket -Query "Queue='General' AND Status='open'" | Get-RTTicket
 
+        Pipe search results to Get-RTTicket to retrieve full details for each matching ticket.
+
     .EXAMPLE
         Get-RTTicket -Id 12345 -Detailed
+
+        Retrieve full ticket details including priority, time tracking, and custom fields.
 
     .OUTPUTS
         PSCustomObject with ticket fields.

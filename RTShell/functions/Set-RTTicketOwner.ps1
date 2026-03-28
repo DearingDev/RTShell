@@ -23,21 +23,32 @@
     .PARAMETER PassThru
         Return the updated ticket object after a successful update.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
         Set-RTTicketOwner -Id 12345 -Owner jsmith
 
+        Assign a ticket to a user with confirmation.
+
     .EXAMPLE
-        # Take ownership of a ticket
         Set-RTTicketOwner -Id 12345 -Owner $env:USERNAME -Force
 
-    .EXAMPLE
-        # Unassign a ticket
-        Set-RTTicketOwner -Id 12345 -Owner Nobody
+        Take ownership of a ticket using the current user's name.
 
     .EXAMPLE
-        # Assign all unowned open tickets in a queue to a tech
+        Set-RTTicketOwner -Id 12345 -Owner Nobody
+
+        Unassign a ticket (set owner to Nobody).
+
+    .EXAMPLE
         Search-RTTicket -Queue 'HelpDesk' -Owner Nobody |
             Set-RTTicketOwner -Owner jsmith -Force
+
+        Assign all unowned tickets in a queue to a specific technician.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.

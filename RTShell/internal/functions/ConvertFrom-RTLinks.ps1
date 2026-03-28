@@ -10,9 +10,14 @@
 
         Input example : https://rt.example.com/REST/2.0/user/42
         Output        : 42
+
+	.PARAMETER Url
+		The URL string from which to extract the numeric ID. Typically from an RT REST v2 API response.
+
 	.EXAMPLE
-		# Convert a list of tickets with nested URLs into flat objects with IDs
-		Get-RTTickets -Queue 'Support' | ConvertFrom-RTLinks
+		'https://rt.example.com/REST/2.0/user/42' | ConvertFrom-RTLinks
+
+		Extracts the numeric ID from the URL and returns it as an integer.
 	.OUTPUTS
 		PSCustomObject with '_url' fields converted to IDs where applicable.
     #>

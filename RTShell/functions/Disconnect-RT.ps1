@@ -9,6 +9,8 @@ function Disconnect-RT {
 
     .EXAMPLE
         Disconnect-RT
+
+        Clear the current RT session from memory.
     #>
 	[CmdletBinding()]
 	param()

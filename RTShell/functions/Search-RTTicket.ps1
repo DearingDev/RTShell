@@ -71,49 +71,59 @@
         (default 50; raise to 100 to minimise round-trips on large result sets).
 
     .EXAMPLE
-        # All open tickets (default)
         Search-RTTicket
 
+        Retrieve all open tickets (default behavior).
+
     .EXAMPLE
-        # Open tickets in a specific queue
         Search-RTTicket -Queue 'HelpDesk'
 
+        Search for open tickets in a specific queue.
+
     .EXAMPLE
-        # Unresolved tickets owned by a user
         Search-RTTicket -Status new, open, stalled -Owner jsmith
 
+        Find unresolved tickets owned by a specific user.
+
     .EXAMPLE
-        # Single-word keyword search in subject
         Search-RTTicket -Keyword 'VPN'
 
+        Search for tickets with a single keyword in the subject.
+
     .EXAMPLE
-        # Multi-word phrase search — quote the whole phrase so PowerShell
-        # passes it as one string, not separate words
         Search-RTTicket -Keyword 'Power Automate Premium'
 
+        Search for tickets matching a multi-word phrase.
+
     .EXAMPLE
-        # Multiple distinct terms (AND logic) — each is a separate phrase
         Search-RTTicket -Keyword 'VPN', 'timeout'
 
+        Search for tickets matching multiple keywords using AND logic.
+
     .EXAMPLE
-        # Phrase search in subject AND body
         Search-RTTicket -Keyword 'Power Automate Premium' -IncludeContent
 
+        Search for a phrase in both subject and body content.
+
     .EXAMPLE
-        # All tickets from a requestor regardless of status
         Search-RTTicket -Requestor 'user@example.com' -Status any
 
+        Find all tickets from a requestor regardless of ticket status.
+
     .EXAMPLE
-        # Raw TicketSQL for complex queries
         Search-RTTicket -Query "Queue='Network' AND Priority >= 50 AND Created > '2026-01-01'"
 
-    .EXAMPLE
-        # Retrieve every matching ticket across all pages
-        Search-RTTicket -Keyword 'Solidworks' -Status any -All
+        Execute a raw TicketSQL query for complex searches.
 
     .EXAMPLE
-        # All pages, larger batch size to reduce round-trips
+        Search-RTTicket -Keyword 'Solidworks' -Status any -All
+
+        Retrieve all matching tickets across every page.
+
+    .EXAMPLE
         Search-RTTicket -Keyword 'Solidworks' -Status any -All -PageSize 100
+
+        Fetch all results with a larger batch size to reduce API round-trips.
 
     .OUTPUTS
         PSCustomObject per matching ticket (summary). Pipe to Get-RTTicket for full detail.

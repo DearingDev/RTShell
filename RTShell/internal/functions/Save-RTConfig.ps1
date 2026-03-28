@@ -7,10 +7,14 @@
         Persists non-secret configuration (BaseUri, queue cache) to disk.
         Response templates are stored separately as individual files under
         ~/.rtshell/templates/ and are not managed by this function.
+
+	.PARAMETER Config
+		A hashtable containing the configuration to save. Typically contains BaseUri and queue cache information.
+
 	.EXAMPLE
-		# Save a configuration with BaseUri
-		Save-RTConfig -Config @{
-			BaseUri = 'https://rt.example.com'}
+		Save-RTConfig -Config @{ BaseUri = 'https://rt.example.com' }
+
+		Writes the configuration object to ~/.rtshell/config.json.
     #>
 	[CmdletBinding()]
 	param(

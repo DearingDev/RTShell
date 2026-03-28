@@ -8,15 +8,29 @@
         with ConvertFrom-Json -AsHashtable. This preserves key casing, which
         is required because RT's transaction endpoint returns both 'type' (the
         RT object class, e.g. "transaction") and 'Type' (the transaction type,
-        e.g. "Correspond") on the same object. 
-        
+        e.g. "Correspond") on the same object.
+
         The resulting hashtable is converted to a PSCustomObject tree by
         ConvertTo-RTObject so all callers can use dot notation. The lowercase
         'type' key is stripped during that pass as it is an RT-internal marker
         never used by any caller.
+
+	.PARAMETER Path
+		The REST API path relative to /REST/2.0/. Examples: 'tickets', 'ticket/123', 'user/42'.
+
+	.PARAMETER Method
+		The HTTP method to use. Valid values are 'GET', 'POST', 'PUT', 'DELETE'. Defaults to 'GET'.
+
+	.PARAMETER Body
+		A hashtable containing the request body for POST and PUT operations. Will be converted to JSON.
+
+	.PARAMETER QueryParameters
+		A hashtable of query string parameters to append to the request URL.
+
 	.EXAMPLE
-		# Get the first page of tickets in the Support queue
 		Invoke-RTRequest -Path 'tickets' -QueryParameters @{ Queue = 'Support' }
+
+		Retrieves the first page of tickets in the Support queue from the RT API.
     #>
 	[CmdletBinding()]
 	param(

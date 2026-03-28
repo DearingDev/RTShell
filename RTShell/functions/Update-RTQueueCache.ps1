@@ -15,9 +15,12 @@
     .EXAMPLE
         Update-RTQueueCache
 
+        Refresh the queue cache from the connected RT server.
+
     .EXAMPLE
-        # Check when the cache was last updated
         (Get-Content ~/.rtshell/config.json | ConvertFrom-Json).QueueCacheDate
+
+        Check when the queue cache was last updated.
 
     .OUTPUTS
         None. Updates ~/.rtshell/config.json.

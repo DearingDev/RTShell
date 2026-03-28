@@ -32,19 +32,28 @@
         Replacement Prompts map. Replaces the existing prompts entirely.
         Pass @{} to remove all prompts.
 
-    .EXAMPLE
-        # Update only the body
-        Set-RTTemplate -Name 'phishing-report' -Body "Hi {{RequestorName}},`n`nUpdated response text..."
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
 
     .EXAMPLE
-        # Update description and add prompts
+        Set-RTTemplate -Name 'phishing-report' -Body "Hi {{RequestorName}},`n`nUpdated response text..."
+
+        Update only the body text of a template.
+
+    .EXAMPLE
         Set-RTTemplate -Name 'rdp-instructions' `
             -Description 'RDP setup — includes VPN group and host' `
             -Prompts @{ VpnGroup = 'Enter the VPN group'; HostAddress = 'Enter the host or IP' }
 
+        Update the description and prompt tokens of a template.
+
     .EXAMPLE
-        # Clear the subject override
         Set-RTTemplate -Name 'password-reset' -Subject ''
+
+        Clear the subject override on a template.
 
     .OUTPUTS
         None. Writes confirmation to host on success.

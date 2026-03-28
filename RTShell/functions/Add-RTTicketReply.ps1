@@ -45,29 +45,40 @@
     .PARAMETER PassThru
         Return the updated ticket object after a successful reply.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
-		# Add a simple reply to ticket 12345
         Add-RTTicketReply -Id 12345 -Body "Hi, we have resolved your issue."
 
+        Send a simple reply to a ticket requestor.
+
     .EXAMPLE
-        # Pipe body text from a file
         Get-Content .\reply.txt -Raw | Add-RTTicketReply -Id 12345
 
-    .EXAMPLE
-        # Use a response template interactively
-        Add-RTTicketReply -Id 12345 -TemplateName 'rdp-instructions'
+        Pipe reply text from a file to a ticket.
 
     .EXAMPLE
-        # Use a template in a script, supplying prompt values
+        Add-RTTicketReply -Id 12345 -TemplateName 'rdp-instructions'
+
+        Send a reply using a response template with interactive token prompts.
+
+    .EXAMPLE
         Add-RTTicketReply -Id 12345 -TemplateName 'rdp-instructions' `
             -TemplateValues @{ VpnGroup = 'CORP-VPN'; HostAddress = '10.0.1.50' } `
             -Force
 
+        Send a template reply in a script with predefined token values.
+
     .EXAMPLE
-        # Pipeline from search
         Search-RTTicket -Queue 'HelpDesk' -Keyword 'VPN' |
             Get-RTTicket |
             Add-RTTicketReply -TemplateName 'vpn-reset' -Force
+
+        Pipeline from search to send templated replies to multiple matching tickets.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.

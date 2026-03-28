@@ -22,11 +22,21 @@
     .PARAMETER PassThru
         Return the updated ticket object after a successful update.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
         Set-RTTicketStatus -Id 12345 -Status resolved
 
+        Set a ticket status to resolved with confirmation prompt.
+
     .EXAMPLE
         Set-RTTicketStatus -Id 12345 -Status stalled -Force
+
+        Change a ticket status without showing a confirmation prompt.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.

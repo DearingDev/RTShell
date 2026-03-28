@@ -42,15 +42,22 @@
     .EXAMPLE
         Get-RTTicketHistory -Id 12345
 
+        Retrieve the transaction history for a ticket, showing correspondence and comments.
+
     .EXAMPLE
         Get-RTTicketHistory -Id 12345 -Type Correspond
+
+        Retrieve only outbound correspondence transactions for a ticket.
 
     .EXAMPLE
         Get-RTTicketHistory -Id 12345 -Detailed
 
+        Retrieve all transaction types including internal status changes and field updates.
+
     .EXAMPLE
-        # Show full thread for a ticket, in order
         Get-RTTicketHistory -Id 12345 | Sort-Object Created | Format-List Created, CreatorName, Content
+
+        Fetch the full thread for a ticket and display it in chronological order.
 
     .OUTPUTS
         RTShell.TicketHistory.Summary  (default)

@@ -21,16 +21,27 @@
     .PARAMETER PassThru
         Return the updated ticket object after a successful update.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
         Set-RTTicketQueue -Id 12345 -Queue 'Network'
+
+        Move a ticket to a different queue with confirmation.
 
     .EXAMPLE
         Set-RTTicketQueue -Id 12345 -Queue 'Network' -Force -PassThru
 
+        Move a ticket to a queue without confirmation and return the updated object.
+
     .EXAMPLE
-        # Move all open tickets matching a keyword to a different queue
         Search-RTTicket -Queue 'General' -Keyword 'firewall' |
             Set-RTTicketQueue -Queue 'Network' -Force
+
+        Move all open tickets matching a keyword to a different queue.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.

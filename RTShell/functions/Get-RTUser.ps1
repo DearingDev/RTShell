@@ -26,19 +26,28 @@
     .EXAMPLE
         Get-RTUser -Id 42
 
+        Retrieve a user by numeric user ID.
+
     .EXAMPLE
         Get-RTUser -Name jsmith
+
+        Retrieve a user by login name.
 
     .EXAMPLE
         Get-RTUser -Name jsmith@example.com
 
+        Retrieve a user by email address.
+
     .EXAMPLE
         Get-RTUser -Name jsmith -Detailed
 
+        Retrieve full user details including phone numbers and address information.
+
     .EXAMPLE
-        # Resolve the owner of a ticket
         $ticket = Get-RTTicket -Id 12345
         Get-RTUser -Name $ticket.Owner
+
+        Resolve the owner field from a ticket to get full contact details.
 
     .OUTPUTS
         PSCustomObject with user fields.

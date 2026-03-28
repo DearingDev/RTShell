@@ -17,11 +17,21 @@
     .PARAMETER Force
         Suppress the confirmation prompt and remove immediately.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
         Remove-RTTemplate -Name 'phishing-report'
 
+        Remove a template with confirmation prompt.
+
     .EXAMPLE
         Remove-RTTemplate -Name 'old-template' -Force
+
+        Remove a template without confirmation.
 
     .OUTPUTS
         None. Writes confirmation to host on success.

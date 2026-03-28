@@ -18,16 +18,19 @@
         Queue name to look up. Performs a client-side filter on the full list.
 
     .EXAMPLE
-        # List all queues
         Get-RTQueue
 
-    .EXAMPLE
-        # Get a specific queue by ID
-        Get-RTQueue -Id 3
+        List all queues visible to the authenticated user.
 
     .EXAMPLE
-        # Find a queue by name
+        Get-RTQueue -Id 3
+
+        Retrieve a specific queue by its numeric ID.
+
+    .EXAMPLE
         Get-RTQueue -Name 'HelpDesk'
+
+        Search for a queue by name.
 
     .OUTPUTS
         PSCustomObject per queue.

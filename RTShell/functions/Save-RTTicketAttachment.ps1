@@ -25,8 +25,16 @@
     .PARAMETER Force
         Overwrite an existing file with the same name.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
         Get-RTTicketAttachments -Id 12345 | Save-RTTicketAttachment -DestinationPath ~/Downloads/RT
+
+        Download all attachments from a ticket using pipeline input.
 
     .OUTPUTS
         System.IO.FileInfo for each file written.

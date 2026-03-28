@@ -24,16 +24,19 @@
         the truncated preview.
 
     .EXAMPLE
-        # List all templates
         Get-RTTemplate
 
-    .EXAMPLE
-        # View a specific template
-        Get-RTTemplate -Name 'rdp-instructions'
+        List all available response templates.
 
     .EXAMPLE
-        # View full body and prompts
+        Get-RTTemplate -Name 'rdp-instructions'
+
+        Retrieve a specific template by name with truncated body preview.
+
+    .EXAMPLE
         Get-RTTemplate -Name 'rdp-instructions' -Detailed
+
+        View a template with full body text and prompt definitions.
 
     .OUTPUTS
         PSCustomObject per template with name, description, prompt count, and

@@ -18,8 +18,12 @@
     .EXAMPLE
         Get-RTTicketAttachments -Id 12345
 
+        List file attachments for a ticket.
+
     .EXAMPLE
         Get-RTTicketAttachments -Id 12345 | Save-RTTicketAttachment -DestinationPath ~/Downloads/RT
+
+        Download all attachments from a ticket to a local directory.
 
     .OUTPUTS
         PSCustomObject with attachment metadata per item.

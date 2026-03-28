@@ -52,10 +52,18 @@
         shown to the tech at send time.
         Example: @{ VpnGroup = 'Enter the VPN group name'; HostAddress = 'Enter the RDP host or IP' }
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
         New-RTTemplate -Name 'phishing-report' `
             -Description 'Initial response to a reported phishing email' `
             -Body "Hi {{RequestorName}},`n`nThank you for reporting a suspicious email.`nOur security team has been notified and will investigate.`n`nPlease do not click any links in the email.`n`nRegards,`nIT Support"
+
+        Create a template for phishing report responses.
 
     .EXAMPLE
         New-RTTemplate -Name 'rdp-instructions' `
@@ -63,13 +71,16 @@
             -Body "Hi {{RequestorName}},`n`nTo connect via RDP:`n`n1. Connect to VPN group: {{VpnGroup}}`n2. Open Remote Desktop and connect to: {{HostAddress}}`n`nLet us know if you need further assistance.`n`nRegards,`nIT Support" `
             -Prompts @{ VpnGroup = 'Enter the VPN group name'; HostAddress = 'Enter the RDP host address or IP' }
 
+        Create a template with multiple prompt tokens for interactive input.
+
     .EXAMPLE
-        # Create a template with a subject override
         New-RTTemplate -Name 'password-reset' `
             -Description 'Password reset instructions' `
             -Subject 'Re: Password Reset — Action Required' `
             -Body "Hi {{RequestorName}},`n`nPlease use the following link to reset your password: {{ResetLink}}`n`nThis link expires in 24 hours." `
             -Prompts @{ ResetLink = 'Paste the password reset link' }
+
+        Create a template with a subject override and prompt tokens.
 
     .OUTPUTS
         None. Writes confirmation to host on success.

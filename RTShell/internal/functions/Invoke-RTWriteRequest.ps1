@@ -22,11 +22,18 @@
         Request body as a hashtable. Serialized to JSON automatically.
         Required for POST and PUT. Ignored for DELETE.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .OUTPUTS
         PSCustomObject — deserialized RT response body, or $null for 204.
 	.EXAMPLE
-		# Add correspondence to ticket 123
 		Invoke-RTWriteRequest -Path 'ticket/123/correspond' -Method 'POST' -Body @{ Text = "This is a comment." }
+
+		Sends a new comment to ticket 123 via the RT API.
     #>
 	[CmdletBinding()]
 	[OutputType([PSCustomObject])]

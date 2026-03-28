@@ -38,20 +38,29 @@
     .PARAMETER PassThru
         Return the updated ticket object after a successful update.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
-        # Update a standard field
         Set-RTTicketField -Id 12345 -Fields @{ Subject = 'Revised subject line' }
 
-    .EXAMPLE
-        # Update a custom field
-        Set-RTTicketField -Id 12345 -CustomFields @{ 'ServiceCategory' = 'Network' }
+        Update a standard ticket field.
 
     .EXAMPLE
-        # Update both standard and custom fields in one call
+        Set-RTTicketField -Id 12345 -CustomFields @{ 'ServiceCategory' = 'Network' }
+
+        Update a custom field on a ticket.
+
+    .EXAMPLE
         Set-RTTicketField -Id 12345 `
             -Fields       @{ TimeWorked = 60 } `
             -CustomFields @{ 'Impact' = 'High'; 'RootCause' = 'Hardware failure' } `
             -Force -PassThru
+
+        Update multiple standard and custom fields in a single call.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.

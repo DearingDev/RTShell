@@ -13,8 +13,9 @@
         those are managed separately, often via SecretManagement.
 
     .EXAMPLE
-        # Get the current configuration
         $config = Get-RTConfig
+
+        Retrieves the RTShell configuration from the user's profile directory.
 
     .OUTPUTS
         PSCustomObject. Returns a PSCustomObject representing the RTShell

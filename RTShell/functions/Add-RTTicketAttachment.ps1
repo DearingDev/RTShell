@@ -35,18 +35,27 @@
     .PARAMETER PassThru
         Return the updated ticket object after a successful upload.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
-	    # Add a single attachment to ticket 12345.
         Add-RTTicketAttachment -Id 12345 -Path C:\Logs\error.log
 
-    .EXAMPLE
-	    # Upload multiple files matching a wildcard pattern, suppressing the confirmation prompt.
-        Add-RTTicketAttachment -Id 12345 -Path C:\Reports\*.csv -Force
+        Add a single file attachment to a ticket.
 
     .EXAMPLE
-		# Pipe file objects from Get-ChildItem to upload them, adding a custom comment.
+        Add-RTTicketAttachment -Id 12345 -Path C:\Reports\*.csv -Force
+
+        Upload multiple files matching a wildcard pattern without confirmation.
+
+    .EXAMPLE
         Get-ChildItem C:\Captures\*.pcap |
             Add-RTTicketAttachment -Id 12345 -Comment 'Network captures for analysis.' -Force
+
+        Pipe files from Get-ChildItem to upload them with a custom comment.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.

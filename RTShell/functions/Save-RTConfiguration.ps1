@@ -28,8 +28,12 @@
         $tok = Read-Host -AsSecureString -Prompt 'RT API Token'
         Save-RTConfiguration -BaseUri 'https://rt.example.com' -Token $tok
 
+        Save configuration using a secure string token.
+
     .EXAMPLE
         Save-RTConfiguration -BaseUri 'https://rt.example.com' -TokenPlainText $env:RT_TOKEN
+
+        Save configuration using a plain text token from an environment variable.
 
     .OUTPUTS
         None.

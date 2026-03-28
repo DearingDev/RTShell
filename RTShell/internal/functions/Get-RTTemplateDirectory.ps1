@@ -17,8 +17,9 @@
     .OUTPUTS
         [string] Absolute path to the templates directory.
 	.EXAMPLE
-		# Get the templates directory, creating it if needed
 		Get-RTTemplateDirectory -EnsureExists:$false
+
+		Returns the templates directory path without creating it if it doesn't exist.
     #>
 	[CmdletBinding()]
 	[OutputType([string])]

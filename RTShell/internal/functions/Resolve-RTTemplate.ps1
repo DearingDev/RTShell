@@ -27,7 +27,9 @@
     .OUTPUTS
         [string] Resolved template body.
 	.EXAMPLE
-		# Load template "followup" and resolve tokens against ticket #12345'
+		Get-RTTicket -Id 12345 | Resolve-RTTemplate -TemplateName 'followup' -Interactive
+
+		Load template "followup" and resolve tokens against ticket #12345.
     #>
 	[CmdletBinding()]
 	[OutputType([string])]

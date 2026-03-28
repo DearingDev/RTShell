@@ -30,18 +30,21 @@
         API token as plain text. Useful for CI/scripting.
 
     .EXAMPLE
-        # First time setup
         $tok = Read-Host -AsSecureString -Prompt 'RT API Token'
         Save-RTConfiguration -BaseUri 'https://rt.example.com' -Token $tok
         Connect-RT
 
-    .EXAMPLE
-        # Subsequent sessions
-        Connect-RT
+        Initial setup: save configuration and then establish a connection.
 
     .EXAMPLE
-        # Override saved config
+        Connect-RT
+
+        Connect using previously saved configuration.
+
+    .EXAMPLE
         Connect-RT -BaseUri 'https://rt.example.com' -TokenPlainText $env:RT_TOKEN
+
+        Connect with explicit credentials from environment variables.
 
     .OUTPUTS
         None. Sets module session state on success.

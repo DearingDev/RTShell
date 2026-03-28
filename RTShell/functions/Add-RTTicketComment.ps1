@@ -42,21 +42,31 @@
     .PARAMETER PassThru
         Return the updated ticket object after a successful comment.
 
+    .PARAMETER WhatIf
+        Shows what would happen if the command runs. The command is not run.
+
+    .PARAMETER Confirm
+        Prompts you for confirmation before running the command.
+
     .EXAMPLE
-		# Add a simple comment to ticket 12345
         Add-RTTicketComment -Id 12345 -Body "Checked with vendor — part on order."
 
+        Add a simple internal comment to a ticket.
+
     .EXAMPLE
-        # Pipe body text from a file
         Get-Content .\notes.txt -Raw | Add-RTTicketComment -Id 12345
 
-    .EXAMPLE
-        # Use a response template
-        Add-RTTicketComment -Id 12345 -TemplateName 'escalation-note'
+        Pipe comment text from a file to a ticket.
 
     .EXAMPLE
-        # Scripted comment with PassThru to verify the updated ticket
+        Add-RTTicketComment -Id 12345 -TemplateName 'escalation-note'
+
+        Post a comment using a response template with interactive token prompts.
+
+    .EXAMPLE
         Add-RTTicketComment -Id 12345 -Body "Automated check passed." -Force -PassThru
+
+        Add a comment without confirmation and return the updated ticket object.
 
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.
