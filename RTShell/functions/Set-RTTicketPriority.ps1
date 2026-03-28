@@ -79,7 +79,7 @@
 		Write-Verbose "Setting priority on ticket #$Id to $Priority"
 		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Priority = $Priority }
 
-		Write-Host "Ticket #$Id priority set to $Priority." -ForegroundColor Green
+		Write-Information "Ticket #$Id priority set to $Priority." -InformationAction Continue
 
 		if ($PassThru) {
 			Get-RTTicket -Id $Id

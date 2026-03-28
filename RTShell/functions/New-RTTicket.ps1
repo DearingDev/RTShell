@@ -190,7 +190,7 @@
 	# RT returns the new ticket ID in the response. Surface it regardless of
 	# -PassThru so the tech always knows what was created.
 	$newId = $response.id
-	Write-Host "Ticket #$newId created in queue '$Queue'." -ForegroundColor Green
+	Write-Information "Ticket #$newId created in queue '$Queue'." -InformationAction Continue
 
 	if ($PassThru) {
 		Get-RTTicket -Id $newId

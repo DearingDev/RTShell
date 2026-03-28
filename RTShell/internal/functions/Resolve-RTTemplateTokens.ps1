@@ -57,6 +57,7 @@
     #>
 	[CmdletBinding()]
 	[OutputType([string])]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
 	param(
 		[Parameter(Mandatory)]
 		[string]$Text,

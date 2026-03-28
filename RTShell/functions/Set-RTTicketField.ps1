@@ -135,7 +135,7 @@
 		Write-Verbose "Patching $($requestBody.Count) field(s) on ticket #$Id"
 		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body $requestBody
 
-		Write-Host "Ticket #$Id updated." -ForegroundColor Green
+		Write-Information "Ticket #$Id updated." -InformationAction Continue
 
 		if ($PassThru) {
 			Get-RTTicket -Id $Id

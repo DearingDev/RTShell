@@ -26,6 +26,7 @@
         None. Updates ~/.rtshell/config.json.
     #>
 	[CmdletBinding()]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
 	param()
 
 	$Script:RTSession.AssertConnected()
@@ -63,5 +64,5 @@
 	# Update the in-memory session so the current session benefits immediately.
 	$Script:RTSession.LoadQueueCache($queues)
 
-	Write-Host "Queue cache updated: $($Script:RTSession.QueueCache.Count) queue(s) cached." -ForegroundColor Green
+	Write-Information "Queue cache updated: $($Script:RTSession.QueueCache.Count) queue(s) cached." -InformationAction Continue
 }

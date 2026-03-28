@@ -85,6 +85,6 @@
 		# Delete file
 		Remove-Item -LiteralPath $templatePath -Force
 
-		Write-Host "Response template '$Name' removed." -ForegroundColor Yellow
+		Write-Information "Response template '$Name' removed." -InformationAction Continue
 	}
 }

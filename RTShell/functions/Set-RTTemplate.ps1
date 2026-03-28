@@ -159,6 +159,6 @@
 	# Write back
 	$updated | ConvertTo-Json -Depth 5 | Set-Content -Path $templatePath -Encoding UTF8
 
-	Write-Host "Response template '$Name' updated." -ForegroundColor Green
-	$changeLines | ForEach-Object { Write-Host $_ -ForegroundColor Gray }
+	Write-Information "Response template '$Name' updated." -InformationAction Continue
+	$changeLines | ForEach-Object { Write-Information $_ -InformationAction Continue }
 }

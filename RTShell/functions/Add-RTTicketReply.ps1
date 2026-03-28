@@ -145,7 +145,7 @@
 		Write-Verbose "Posting reply to ticket #$Id"
 		$null = Invoke-RTWriteRequest -Path "ticket/$Id/correspond" -Method POST -Body $requestBody
 
-		Write-Host "Reply sent on ticket #$Id." -ForegroundColor Green
+		Write-Information "Reply sent on ticket #$Id." -InformationAction Continue
 
 		if ($PassThru) {
 			Get-RTTicket -Id $Id

@@ -73,7 +73,7 @@
 		Write-Verbose "Setting status on ticket #$Id to '$Status'"
 		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PUT -Body @{ Status = $Status }
 
-		Write-Host "Ticket #$Id status set to '$Status'." -ForegroundColor Green
+		Write-Information "Ticket #$Id status set to '$Status'." -InformationAction Continue
 
 		if ($PassThru) {
 			Get-RTTicket -Id $Id

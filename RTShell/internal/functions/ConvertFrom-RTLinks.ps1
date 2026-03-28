@@ -22,6 +22,8 @@
 		PSCustomObject with '_url' fields converted to IDs where applicable.
     #>
 	[CmdletBinding()]
+	[OutputType([int], [string])]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
 	param(
 		[Parameter(Mandatory, ValueFromPipeline)]
 		[string]$Url
@@ -29,8 +31,10 @@
 
 	process {
 		if ($Url -match '/(\d+)$') {
-			return [int]$Matches[1]
+			[int]$Matches[1]
 		}
-		return $Url   # Return as-is if no trailing ID found
+		else {
+			$Url   # Return as-is if no trailing ID found
+		}
 	}
 }

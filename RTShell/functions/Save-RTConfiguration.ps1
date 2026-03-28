@@ -39,6 +39,7 @@
         None.
     #>
 	[CmdletBinding(DefaultParameterSetName = 'SecureToken')]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '')]
 	param(
 		[Parameter(Mandatory)]
 		[ValidateNotNullOrEmpty()]
@@ -56,6 +57,7 @@
 
 	# Convert PlainText to SecureString for the SecretManagement module if needed
 	if ($PSCmdlet.ParameterSetName -eq 'PlainToken') {
+		# PSScriptAnalyzer ignore PSAvoidUsingConvertToSecureStringWithPlainText
 		$Token = ConvertTo-SecureString -String $TokenPlainText -AsPlainText -Force
 	}
 
@@ -76,7 +78,7 @@
 	# Save the token to SecretManagement
 	Set-Secret -Name 'RTShell_Token' -Secret $Token -NoClobber:$false
 
-	Write-Host "Configuration saved." -ForegroundColor Green
-	Write-Host "  BaseUri : $BaseUri (saved to ~/.rtshell/config.json)" -ForegroundColor Gray
-	Write-Host "  Token   : saved to SecretManagement vault as 'RTShell_Token'" -ForegroundColor Gray
+	Write-Information "Configuration saved." -InformationAction Continue
+	Write-Information "  BaseUri : $BaseUri (saved to ~/.rtshell/config.json)" -InformationAction Continue
+	Write-Information "  Token   : saved to SecretManagement vault as 'RTShell_Token'" -InformationAction Continue
 }

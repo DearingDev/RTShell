@@ -144,7 +144,7 @@
 		$null = Invoke-RTWriteRequest -Path "ticket/$Id/comment" -Method POST -Body $requestBody
 
 		$plural = if ($resolvedFiles.Count -eq 1) { 'attachment' } else { 'attachments' }
-		Write-Host "$($resolvedFiles.Count) $plural uploaded to ticket #$Id." -ForegroundColor Green
+		Write-Information "$($resolvedFiles.Count) $plural uploaded to ticket #$Id." -InformationAction Continue
 
 		if ($PassThru) {
 			Get-RTTicket -Id $Id

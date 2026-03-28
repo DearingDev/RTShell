@@ -124,11 +124,11 @@
 	}
 
 	$queueCount = $Script:RTSession.QueueCache.Count
-	Write-Host "Connected to RT at $($Script:RTSession.BaseUri)" -ForegroundColor Green
+	Write-Information "Connected to RT at $($Script:RTSession.BaseUri)" -InformationAction Continue
 	if ($queueCount -gt 0) {
-		Write-Host "  Queues cached : $queueCount (run Update-RTQueueCache to refresh)" -ForegroundColor Gray
+		Write-Information "  Queues cached : $queueCount (run Update-RTQueueCache to refresh)" -InformationAction Continue
 	}
 	else {
-		Write-Host "  Queue cache   : empty -- run Update-RTQueueCache to populate" -ForegroundColor Yellow
+		Write-Information "  Queue cache   : empty -- run Update-RTQueueCache to populate" -InformationAction Continue
 	}
 }

@@ -75,7 +75,7 @@
 		Write-Verbose "Moving ticket #$Id to queue '$Queue'"
 		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Queue = $Queue }
 
-		Write-Host "Ticket #$Id moved to queue '$Queue'." -ForegroundColor Green
+		Write-Information "Ticket #$Id moved to queue '$Queue'." -InformationAction Continue
 
 		if ($PassThru) {
 			Get-RTTicket -Id $Id

@@ -41,6 +41,7 @@
     #>
 	[CmdletBinding(SupportsShouldProcess)]
 	[OutputType([System.IO.FileInfo])]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'ContentEncoding')]
 	param(
 		[Parameter(Mandatory, ValueFromPipelineByPropertyName)]
 		[int]$AttachmentId,

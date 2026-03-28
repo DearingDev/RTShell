@@ -136,11 +136,11 @@
 	# Write file
 	$newTemplate | ConvertTo-Json -Depth 5 | Set-Content -Path $templatePath -Encoding UTF8
 
-	Write-Host "Response template '$Name' created at '$templatePath'." -ForegroundColor Green
+	Write-Information "Response template '$Name' created at '$templatePath'." -InformationAction Continue
 
 	if ($Prompts.Count -gt 0) {
-		Write-Host "  Prompt tokens  : $($Prompts.Keys -join ', ')" -ForegroundColor Gray
+		Write-Information "  Prompt tokens  : $($Prompts.Keys -join ', ')" -InformationAction Continue
 	}
-	Write-Host "  Use with       : Add-RTTicketReply -TemplateName '$Name'" -ForegroundColor Gray
-	Write-Host "                   Add-RTTicketComment -TemplateName '$Name'" -ForegroundColor Gray
+	Write-Information "  Use with       : Add-RTTicketReply -TemplateName '$Name'" -InformationAction Continue
+	Write-Information "                   Add-RTTicketComment -TemplateName '$Name'" -InformationAction Continue
 }

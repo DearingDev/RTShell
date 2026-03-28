@@ -30,6 +30,7 @@
     #>
 	[CmdletBinding()]
 	[OutputType([PSCustomObject])]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
 	param(
 		[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
 		[Alias('TicketId', 'numerical_id')]

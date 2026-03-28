@@ -16,5 +16,5 @@ function Disconnect-RT {
 	param()
 
 	$Script:RTSession.Disconnect()
-	Write-Host "Disconnected from RT." -ForegroundColor Yellow
+	Write-Information "Disconnected from RT." -InformationAction Continue
 }

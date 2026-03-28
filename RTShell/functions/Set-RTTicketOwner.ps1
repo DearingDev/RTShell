@@ -83,7 +83,7 @@
 		Write-Verbose "Setting owner on ticket #$Id to '$Owner'"
 		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Owner = $Owner }
 
-		Write-Host "Ticket #$Id owner set to '$Owner'." -ForegroundColor Green
+		Write-Information "Ticket #$Id owner set to '$Owner'." -InformationAction Continue
 
 		if ($PassThru) {
 			Get-RTTicket -Id $Id

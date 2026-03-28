@@ -127,7 +127,7 @@
 		Write-Verbose "Posting internal comment to ticket #$Id"
 		$null = Invoke-RTWriteRequest -Path "ticket/$Id/comment" -Method POST -Body $requestBody
 
-		Write-Host "Comment added to ticket #$Id." -ForegroundColor Green
+		Write-Information "Comment added to ticket #$Id." -InformationAction Continue
 
 		if ($PassThru) {
 			Get-RTTicket -Id $Id
