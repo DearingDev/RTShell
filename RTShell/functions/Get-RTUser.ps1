@@ -1,4 +1,4 @@
-function Get-RTUser {
+﻿function Get-RTUser {
     <#
     .SYNOPSIS
         Retrieves an RT user record.

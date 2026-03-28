@@ -20,18 +20,18 @@ if (-not (Test-Path -Path "$WorkingDirectory\publish\RTShell")) {
 
 $config = Import-PowerShellDataFile -Path (Join-Path -Path $WorkingDirectory -ChildPath 'config.psd1') -ErrorAction Stop
 if (-not $config.GithubRelease) {
-	Write-Host "Skipping the Github release as configured"
+	Write-Output "Skipping the Github release as configured"
 	return
 }
 
 $moduleVersion = (Import-PowerShellDataFile -Path "$WorkingDirectory\publish\RTShell\RTShell.psd1").ModuleVersion
 
 # Step 1: Zip Module Content
-Write-Host "Wrapping up built module into a zip archive"
+Write-Output "Wrapping up built module into a zip archive"
 Compress-Archive -Path "$WorkingDirectory\publish\RTShell\*" -DestinationPath "$WorkingDirectory\publish\RTShell.zip" -Force
 
 # Step 2: Create Release
-Write-Host "Registering new release for version $($moduleVersion) with Github"
+Write-Output "Registering new release for version $($moduleVersion) with Github"
 $response = Invoke-RestMethod -Method POST -Uri 'https://api.github.com/repos/DearingDev/RTShell/releases' -Headers @{
 	Authorization = "Bearer $env:GH_TOKEN"
 	Accept = 'application/vnd.github+json'
@@ -45,7 +45,7 @@ $response = Invoke-RestMethod -Method POST -Uri 'https://api.github.com/repos/De
 
 # Step 3: Upload ZIP as Release content
 
-Write-Host "Publishing module archive to new release"
+Write-Output "Publishing module archive to new release"
 Invoke-RestMethod -Method POST -Uri "$($response.assets_url -replace 'api\.github\.com', 'uploads.github.com')?name=RTShell.zip" -Headers @{
 	Authorization = "Bearer $env:GH_TOKEN"
 	Accept = 'application/vnd.github+json'

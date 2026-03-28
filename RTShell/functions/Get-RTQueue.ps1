@@ -1,4 +1,4 @@
-function Get-RTQueue {
+﻿function Get-RTQueue {
     <#
     .SYNOPSIS
         Retrieves RT queue information.

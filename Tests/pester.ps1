@@ -12,9 +12,9 @@
 	$Exclude = ""
 )
 
-Write-Host "Starting Tests"
+Write-Output "Starting Tests"
 
-Write-Host "Importing Module"
+Write-Output "Importing Module"
 
 $global:testroot = $PSScriptRoot
 $global:__pester_data = @{ }
@@ -26,7 +26,7 @@ Import-Module "$PSScriptRoot\..\RTShell\RTShell.psm1" -Force
 # Need to import explicitly so we can use the configuration class
 Import-Module Pester
 
-Write-Host "Creating test result folder"
+Write-Output "Creating test result folder"
 $null = New-Item -Path "$PSScriptRoot\.." -Name TestResults -ItemType Directory -Force
 
 $totalFailed = 0
@@ -38,12 +38,12 @@ $config.TestResult.Enabled = $true
 
 #region Run General Tests
 if ($TestGeneral) {
-	Write-Host "Modules imported, proceeding with general tests"
+	Write-Output "Modules imported, proceeding with general tests"
 	foreach ($file in (Get-ChildItem "$PSScriptRoot\general" | Where-Object Name -Like "*.Tests.ps1")) {
 		if ($file.Name -notlike $Include) { continue }
 		if ($file.Name -like $Exclude) { continue }
 
-		Write-Host "  Executing $($file.Name)"
+		Write-Output "  Executing $($file.Name)"
 		$config.TestResult.OutputPath = Join-Path "$PSScriptRoot\..\TestResults" "TEST-$($file.BaseName).xml"
 		$config.Run.Path = $file.FullName
 		$config.Run.PassThru = $true
@@ -69,12 +69,12 @@ $global:__pester_data.ScriptAnalyzer | Out-Host
 
 #region Test Commands
 if ($TestFunctions) {
-	Write-Host "Proceeding with individual tests"
+	Write-Output "Proceeding with individual tests"
 	foreach ($file in (Get-ChildItem "$PSScriptRoot\functions" -Recurse -File | Where-Object Name -Like "*Tests.ps1")) {
 		if ($file.Name -notlike $Include) { continue }
 		if ($file.Name -like $Exclude) { continue }
 		
-		Write-Host "  Executing $($file.Name)"
+		Write-Output "  Executing $($file.Name)"
 		$config.TestResult.OutputPath = Join-Path "$PSScriptRoot\..\TestResults" "TEST-$($file.BaseName).xml"
 		$config.Run.Path = $file.FullName
 		$config.Run.PassThru = $true
@@ -98,8 +98,8 @@ if ($TestFunctions) {
 
 $testresults | Sort-Object Describe, Context, Name, Result, Message | Format-List
 
-if ($totalFailed -eq 0) { Write-Host "All $totalRun tests executed without a single failure!" }
-else { Write-Host "$totalFailed tests out of $totalRun tests failed!" }
+if ($totalFailed -eq 0) { Write-Output "All $totalRun tests executed without a single failure!" }
+else { Write-Output "$totalFailed tests out of $totalRun tests failed!" }
 
 if ($totalFailed -gt 0) {
 	throw "$totalFailed / $totalRun tests failed!"

@@ -1,5 +1,5 @@
-function Get-RTTemplateDirectory {
-    <#
+﻿function Get-RTTemplateDirectory {
+	<#
     .SYNOPSIS
         Internal helper. Returns the path to the RTShell templates directory and
         optionally ensures it exists.
@@ -16,20 +16,23 @@ function Get-RTTemplateDirectory {
 
     .OUTPUTS
         [string] Absolute path to the templates directory.
+	.EXAMPLE
+		# Get the templates directory, creating it if needed
+		Get-RTTemplateDirectory -EnsureExists:$false
     #>
-    [CmdletBinding()]
-    [OutputType([string])]
-    param(
-        [bool]$EnsureExists = $true
-    )
+	[CmdletBinding()]
+	[OutputType([string])]
+	param(
+		[bool]$EnsureExists = $true
+	)
 
-    $dir = Join-Path -Path ([System.Environment]::GetFolderPath('UserProfile')) -ChildPath '.rtshell' |
-           Join-Path -ChildPath 'templates'
+	$dir = Join-Path -Path ([System.Environment]::GetFolderPath('UserProfile')) -ChildPath '.rtshell' |
+		Join-Path -ChildPath 'templates'
 
-    if ($EnsureExists -and -not (Test-Path -LiteralPath $dir -PathType Container)) {
-        New-Item -ItemType Directory -Path $dir -Force | Out-Null
-        Write-Verbose "Created templates directory: $dir"
-    }
+	if ($EnsureExists -and -not (Test-Path -LiteralPath $dir -PathType Container)) {
+		New-Item -ItemType Directory -Path $dir -Force | Out-Null
+		Write-Verbose "Created templates directory: $dir"
+	}
 
-    return $dir
+	return $dir
 }

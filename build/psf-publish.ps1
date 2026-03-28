@@ -32,13 +32,13 @@ if (-not (Test-Path -Path $publishDir)) {
 }
 
 if ($LocalRepo) {
-	Write-Host "Creating Nuget Package for module: 'RTShell' at '$(Get-Location)"
+	Write-Output "Creating Nuget Package for module: 'RTShell' at '$(Get-Location)"
 	Publish-PSFModule -Path "$($publishDir)\RTShell" -DestinationPath . -SkipDependenciesCheck
 	return
 }
 
 # Publish to Gallery
-Write-Host "Publishing the RTShell module to $($Repository)"
+Write-Output "Publishing the RTShell module to $($Repository)"
 $param = @{
 	Path                  = "$($publishDir)\RTShell"
 	Repository            = $Repository

@@ -1,5 +1,5 @@
-function Set-RTTicketQueue {
-    <#
+﻿function Set-RTTicketQueue {
+	<#
     .SYNOPSIS
         Moves an RT ticket to a different queue.
 
@@ -35,39 +35,39 @@ function Set-RTTicketQueue {
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [Alias('TicketId', 'numerical_id')]
-        [int]$Id,
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
+	[OutputType([PSCustomObject])]
+	param(
+		[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+		[Alias('TicketId', 'numerical_id')]
+		[int]$Id,
 
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Queue,
+		[Parameter(Mandatory)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Queue,
 
-        [switch]$Force,
+		[switch]$Force,
 
-        [switch]$PassThru
-    )
+		[switch]$PassThru
+	)
 
-    process {
-        Write-Verbose "Fetching ticket #$Id"
-        $ticket = Get-RTTicket -Id $Id
+	process {
+		Write-Verbose "Fetching ticket #$Id"
+		$ticket = Get-RTTicket -Id $Id
 
-        $promptText = "Ticket #$Id — $($ticket.Subject)`nQueue: $($ticket.Queue) → $Queue"
+		$promptText = "Ticket #$Id — $($ticket.Subject)`nQueue: $($ticket.Queue) → $Queue"
 
-        if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Move to queue')) {
-            return
-        }
+		if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Move to queue')) {
+			return
+		}
 
-        Write-Verbose "Moving ticket #$Id to queue '$Queue'"
-        $null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Queue = $Queue }
+		Write-Verbose "Moving ticket #$Id to queue '$Queue'"
+		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Queue = $Queue }
 
-        Write-Host "Ticket #$Id moved to queue '$Queue'." -ForegroundColor Green
+		Write-Host "Ticket #$Id moved to queue '$Queue'." -ForegroundColor Green
 
-        if ($PassThru) {
-            Get-RTTicket -Id $Id
-        }
-    }
+		if ($PassThru) {
+			Get-RTTicket -Id $Id
+		}
+	}
 }

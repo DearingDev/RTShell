@@ -1,5 +1,5 @@
-function New-RTTicket {
-    <#
+﻿function New-RTTicket {
+	<#
     .SYNOPSIS
         Creates a new RT ticket.
 
@@ -83,103 +83,104 @@ function New-RTTicket {
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Queue,
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
+	[OutputType([PSCustomObject])]
+	param(
+		[Parameter(Mandatory)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Queue,
 
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Subject,
+		[Parameter(Mandatory)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Subject,
 
-        [string[]]$Requestor,
+		[string[]]$Requestor,
 
-        [string]$Body,
+		[string]$Body,
 
-        [string]$Owner,
+		[string]$Owner,
 
-        [string[]]$Cc,
+		[string[]]$Cc,
 
-        [string[]]$AdminCc,
+		[string[]]$AdminCc,
 
-        [ValidateRange(0, 100)]
-        [int]$Priority,
+		[ValidateRange(0, 100)]
+		[int]$Priority,
 
-        [ValidateSet('new', 'open', 'stalled')]
-        [string]$Status = 'new',
+		[ValidateSet('new', 'open', 'stalled')]
+		[string]$Status = 'new',
 
-        [hashtable]$CustomFields,
+		[hashtable]$CustomFields,
 
-        [switch]$Force,
+		[switch]$Force,
 
-        [switch]$PassThru
-    )
+		[switch]$PassThru
+	)
 
-    # Confirmation prompt
-    $requestorDisplay = if ($Requestor) { $Requestor -join ', ' } else { '(authenticated user)' }
-    $bodyPreview      = if ($Body) {
-        $preview = if ($Body.Length -gt 200) { $Body.Substring(0, 200) + '…' } else { $Body }
-        "`nBody preview:`n$preview"
-    } else { '' }
+	# Confirmation prompt
+	$requestorDisplay = if ($Requestor) { $Requestor -join ', ' } else { '(authenticated user)' }
+	$bodyPreview = if ($Body) {
+		$preview = if ($Body.Length -gt 200) { $Body.Substring(0, 200) + '…' } else { $Body }
+		"`nBody preview:`n$preview"
+	}
+ else { '' }
 
-    $promptText = "Queue: $Queue | Subject: $Subject | Requestor: $requestorDisplay$bodyPreview"
+	$promptText = "Queue: $Queue | Subject: $Subject | Requestor: $requestorDisplay$bodyPreview"
 
-    if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Create ticket')) {
-        return
-    }
+	if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Create ticket')) {
+		return
+	}
 
-    # Build request body
-    $requestBody = @{
-        Queue   = $Queue
-        Subject = $Subject
-        Status  = $Status
-    }
+	# Build request body
+	$requestBody = @{
+		Queue   = $Queue
+		Subject = $Subject
+		Status  = $Status
+	}
 
-    if ($Requestor -and $Requestor.Count -gt 0) {
-        # RT accepts a single string or an array depending on version.
-        # Always send as array for consistency with RT 5.x.
-        $requestBody['Requestor'] = $Requestor
-    }
+	if ($Requestor -and $Requestor.Count -gt 0) {
+		# RT accepts a single string or an array depending on version.
+		# Always send as array for consistency with RT 5.x.
+		$requestBody['Requestor'] = $Requestor
+	}
 
-    if ($Owner) {
-        $requestBody['Owner'] = $Owner
-    }
+	if ($Owner) {
+		$requestBody['Owner'] = $Owner
+	}
 
-    if ($Cc -and $Cc.Count -gt 0) {
-        $requestBody['Cc'] = $Cc
-    }
+	if ($Cc -and $Cc.Count -gt 0) {
+		$requestBody['Cc'] = $Cc
+	}
 
-    if ($AdminCc -and $AdminCc.Count -gt 0) {
-        $requestBody['AdminCc'] = $AdminCc
-    }
+	if ($AdminCc -and $AdminCc.Count -gt 0) {
+		$requestBody['AdminCc'] = $AdminCc
+	}
 
-    if ($PSBoundParameters.ContainsKey('Priority')) {
-        $requestBody['Priority'] = $Priority
-    }
+	if ($PSBoundParameters.ContainsKey('Priority')) {
+		$requestBody['Priority'] = $Priority
+	}
 
-    if ($Body) {
-        $requestBody['Content']     = $Body
-        $requestBody['ContentType'] = 'text/plain'
-    }
+	if ($Body) {
+		$requestBody['Content'] = $Body
+		$requestBody['ContentType'] = 'text/plain'
+	}
 
-    # Custom fields are passed as a nested object under 'CustomFields'.
-    # RT expects keys as the field name exactly as defined in RT.
-    if ($CustomFields -and $CustomFields.Count -gt 0) {
-        $requestBody['CustomFields'] = $CustomFields
-    }
+	# Custom fields are passed as a nested object under 'CustomFields'.
+	# RT expects keys as the field name exactly as defined in RT.
+	if ($CustomFields -and $CustomFields.Count -gt 0) {
+		$requestBody['CustomFields'] = $CustomFields
+	}
 
-    # Post
-    Write-Verbose "Creating new ticket in queue '$Queue'"
-    $response = Invoke-RTWriteRequest -Path 'ticket' -Method POST -Body $requestBody
+	# Post
+	Write-Verbose "Creating new ticket in queue '$Queue'"
+	$response = Invoke-RTWriteRequest -Path 'ticket' -Method POST -Body $requestBody
 
-    # RT returns the new ticket ID in the response. Surface it regardless of
-    # -PassThru so the tech always knows what was created.
-    $newId = $response.id
-    Write-Host "Ticket #$newId created in queue '$Queue'." -ForegroundColor Green
+	# RT returns the new ticket ID in the response. Surface it regardless of
+	# -PassThru so the tech always knows what was created.
+	$newId = $response.id
+	Write-Host "Ticket #$newId created in queue '$Queue'." -ForegroundColor Green
 
-    if ($PassThru) {
-        Get-RTTicket -Id $newId
-    }
+	if ($PassThru) {
+		Get-RTTicket -Id $newId
+	}
 }

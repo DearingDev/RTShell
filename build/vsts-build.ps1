@@ -40,7 +40,7 @@ if ($PSBoundParameters.Keys -notcontains 'ExportFunctions') {
 #endregion Handle Configuration
 
 # Prepare publish folder
-Write-Host "Creating and populating publishing directory"
+Write-Output "Creating and populating publishing directory"
 $publishDir = New-Item -Path $WorkingDirectory -Name publish -ItemType Directory -Force
 Remove-Item -Path "$publishDir/*" -Recurse -Force
 Copy-Item -Path "$($WorkingDirectory)\RTShell" -Destination $publishDir.FullName -Recurse -Force
@@ -75,7 +75,7 @@ Remove-Item -Path "$($publishDir.FullName)\RTShell\functions" -Recurse -Force
 
 #region Updating the Module Version
 if ($AutoVersion) {
-	Write-Host "Updating module version numbers."
+	Write-Output "Updating module version numbers."
 	try { [version]$remoteVersion = (Find-Module 'RTShell' -Repository $Repository -ErrorAction Stop).Version }
 	catch {
 		throw "Failed to access $($Repository) : $_"
@@ -91,7 +91,7 @@ if ($AutoVersion) {
 
 #region Export Functions
 if ($ExportFunctions) {
-	Write-Host "Exporting all public functions"
+	Write-Output "Exporting all public functions"
 
 	$functionFiles = Get-ChildItem -Path "$($WorkingDirectory)\RTShell\functions" -Filter '*.ps1' -Recurse
 	Update-ModuleManifest -Path "$($publishDir.FullName)\RTShell\RTShell.psd1" -FunctionsToExport ($functionFiles.BaseName | Sort-Object)

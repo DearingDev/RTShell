@@ -1,5 +1,5 @@
-function Add-RTTicketReply {
-    <#
+﻿function Add-RTTicketReply {
+	<#
     .SYNOPSIS
         Sends a reply (outbound correspondence) on an RT ticket.
 
@@ -46,6 +46,7 @@ function Add-RTTicketReply {
         Return the updated ticket object after a successful reply.
 
     .EXAMPLE
+		# Add a simple reply to ticket 12345
         Add-RTTicketReply -Id 12345 -Body "Hi, we have resolved your issue."
 
     .EXAMPLE
@@ -71,72 +72,72 @@ function Add-RTTicketReply {
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High', DefaultParameterSetName = 'DirectBody')]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [Alias('TicketId', 'numerical_id')]
-        [int]$Id,
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High', DefaultParameterSetName = 'DirectBody')]
+	[OutputType([PSCustomObject])]
+	param(
+		[Parameter(Mandatory, ValueFromPipelineByPropertyName)]
+		[Alias('TicketId', 'numerical_id')]
+		[int]$Id,
 
-        [Parameter(Mandatory, ParameterSetName = 'DirectBody', ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Body,
+		[Parameter(Mandatory, ParameterSetName = 'DirectBody', ValueFromPipeline, ValueFromPipelineByPropertyName)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Body,
 
-        [Parameter(Mandatory, ParameterSetName = 'Template')]
-        [ValidateNotNullOrEmpty()]
-        [string]$TemplateName,
+		[Parameter(Mandatory, ParameterSetName = 'Template')]
+		[ValidateNotNullOrEmpty()]
+		[string]$TemplateName,
 
-        [Parameter(ParameterSetName = 'Template')]
-        [hashtable]$TemplateValues = @{},
+		[Parameter(ParameterSetName = 'Template')]
+		[hashtable]$TemplateValues = @{},
 
-        [string[]]$Cc,
+		[string[]]$Cc,
 
-        [switch]$Force,
+		[switch]$Force,
 
-        [switch]$PassThru
-    )
+		[switch]$PassThru
+	)
 
-    process {
-        # Fetch ticket for confirmation prompt and token resolution
-        Write-Verbose "Fetching ticket #$Id for reply"
-        $ticket = Get-RTTicket -Id $Id
+	process {
+		# Fetch ticket for confirmation prompt and token resolution
+		Write-Verbose "Fetching ticket #$Id for reply"
+		$ticket = Get-RTTicket -Id $Id
 
-        # Resolve body
-        if ($PSCmdlet.ParameterSetName -eq 'Template') {
-            $Body = Resolve-RTTemplate `
-                -TemplateName $TemplateName `
-                -Ticket       $ticket `
-                -Values       $TemplateValues `
-                -Interactive:(-not $Force)
-        }
+		# Resolve body
+		if ($PSCmdlet.ParameterSetName -eq 'Template') {
+			$Body = Resolve-RTTemplate `
+				-TemplateName $TemplateName `
+				-Ticket $ticket `
+				-Values $TemplateValues `
+				-Interactive:(-not $Force)
+		}
 
-        # Confirmation prompt
-        $preview    = if ($Body.Length -gt 200) { $Body.Substring(0, 200) + '…' } else { $Body }
-        $promptText = "Ticket #$Id — $($ticket.Subject)`nReply preview:`n$preview"
+		# Confirmation prompt
+		$preview = if ($Body.Length -gt 200) { $Body.Substring(0, 200) + '…' } else { $Body }
+		$promptText = "Ticket #$Id — $($ticket.Subject)`nReply preview:`n$preview"
 
-        if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Send reply')) {
-            return
-        }
+		if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Send reply')) {
+			return
+		}
 
-        # Build request body
-        $requestBody = @{
-            Action      = 'correspond'
-            Content     = $Body
-            ContentType = 'text/plain'
-        }
+		# Build request body
+		$requestBody = @{
+			Action      = 'correspond'
+			Content     = $Body
+			ContentType = 'text/plain'
+		}
 
-        if ($Cc -and $Cc.Count -gt 0) {
-            $requestBody['Cc'] = $Cc -join ', '
-        }
+		if ($Cc -and $Cc.Count -gt 0) {
+			$requestBody['Cc'] = $Cc -join ', '
+		}
 
-        # Post
-        Write-Verbose "Posting reply to ticket #$Id"
-        $null = Invoke-RTWriteRequest -Path "ticket/$Id/correspond" -Method POST -Body $requestBody
+		# Post
+		Write-Verbose "Posting reply to ticket #$Id"
+		$null = Invoke-RTWriteRequest -Path "ticket/$Id/correspond" -Method POST -Body $requestBody
 
-        Write-Host "Reply sent on ticket #$Id." -ForegroundColor Green
+		Write-Host "Reply sent on ticket #$Id." -ForegroundColor Green
 
-        if ($PassThru) {
-            Get-RTTicket -Id $Id
-        }
-    }
+		if ($PassThru) {
+			Get-RTTicket -Id $Id
+		}
+	}
 }

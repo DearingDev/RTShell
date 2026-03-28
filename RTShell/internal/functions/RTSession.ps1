@@ -1,4 +1,4 @@
-class RTSession {
+﻿class RTSession {
     # Properties
     [string]   $BaseUri
     [string]   hidden $Token        # plain-text; hidden keeps it out of Format-List / Select-Object *

@@ -1,4 +1,4 @@
-function Get-RTTicket {
+﻿function Get-RTTicket {
     <#
     .SYNOPSIS
         Retrieves metadata for one or more RT tickets by ID.

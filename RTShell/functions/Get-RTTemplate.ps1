@@ -1,4 +1,4 @@
-function Get-RTTemplate {
+﻿function Get-RTTemplate {
     <#
     .SYNOPSIS
         Retrieves one or all response templates from the RTShell templates directory.
@@ -52,7 +52,7 @@ function Get-RTTemplate {
     $templateDir = Get-RTTemplateDirectory -EnsureExists:$false
 
     if (-not (Test-Path -LiteralPath $templateDir -PathType Container)) {
-        Write-Host "No templates directory found at '$templateDir'. Use New-RTTemplate to create a template." -ForegroundColor Yellow
+        Write-Output "No templates directory found at '$templateDir'. Use New-RTTemplate to create a template." -ForegroundColor Yellow
         return
     }
 
@@ -75,7 +75,7 @@ function Get-RTTemplate {
         $files = @(Get-ChildItem -Path $templateDir -Filter '*.json' | Sort-Object Name)
 
         if ($files.Count -eq 0) {
-            Write-Host "No response templates are configured. Use New-RTTemplate to create one." -ForegroundColor Yellow
+            Write-Output "No response templates are configured. Use New-RTTemplate to create one." -ForegroundColor Yellow
             return
         }
     }

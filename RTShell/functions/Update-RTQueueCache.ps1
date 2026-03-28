@@ -1,5 +1,5 @@
-function Update-RTQueueCache {
-    <#
+﻿function Update-RTQueueCache {
+	<#
     .SYNOPSIS
         Refreshes the local queue name cache from the RT server.
 
@@ -22,43 +22,43 @@ function Update-RTQueueCache {
     .OUTPUTS
         None. Updates ~/.rtshell/config.json.
     #>
-    [CmdletBinding()]
-    param()
+	[CmdletBinding()]
+	param()
 
-    $Script:RTSession.AssertConnected()
+	$Script:RTSession.AssertConnected()
 
-    Write-Verbose "Refreshing queue cache from RT..."
+	Write-Verbose "Refreshing queue cache from RT..."
 
-    $result = Invoke-RTRequest -Path 'queues/all'
+	$result = Invoke-RTRequest -Path 'queues/all'
 
-    if (-not $result.items -or $result.items.Count -eq 0) {
-        Write-Warning "No queues returned from RT. Cache not updated."
-        return
-    }
+	if (-not $result.items -or $result.items.Count -eq 0) {
+		Write-Warning "No queues returned from RT. Cache not updated."
+		return
+	}
 
-    $queues = foreach ($item in $result.items) {
-        $detail = Invoke-RTRequest -Path "queue/$($item.id)"
-        @{
-            Id          = $detail.id
-            Name        = $detail.Name
-            Description = $detail.Description
-            Disabled    = [bool][int]$detail.Disabled
-        }
-    }
+	$queues = foreach ($item in $result.items) {
+		$detail = Invoke-RTRequest -Path "queue/$($item.id)"
+		@{
+			Id          = $detail.id
+			Name        = $detail.Name
+			Description = $detail.Description
+			Disabled    = [bool][int]$detail.Disabled
+		}
+	}
 
-    $config = Get-RTConfig
-    if (-not $config) { $config = @{} }
+	$config = Get-RTConfig
+	if (-not $config) { $config = @{} }
 
-    $configHash = @{
-        BaseUri        = $config.BaseUri
-        QueueCache     = @($queues)
-        QueueCacheDate = (Get-Date -Format 'o')
-    }
+	$configHash = @{
+		BaseUri        = $config.BaseUri
+		QueueCache     = @($queues)
+		QueueCacheDate = (Get-Date -Format 'o')
+	}
 
-    Save-RTConfig -Config $configHash
+	Save-RTConfig -Config $configHash
 
-    # Update the in-memory session so the current session benefits immediately.
-    $Script:RTSession.LoadQueueCache($queues)
+	# Update the in-memory session so the current session benefits immediately.
+	$Script:RTSession.LoadQueueCache($queues)
 
-    Write-Host "Queue cache updated: $($Script:RTSession.QueueCache.Count) queue(s) cached." -ForegroundColor Green
+	Write-Host "Queue cache updated: $($Script:RTSession.QueueCache.Count) queue(s) cached." -ForegroundColor Green
 }

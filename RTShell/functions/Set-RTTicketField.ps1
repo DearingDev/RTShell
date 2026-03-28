@@ -1,5 +1,5 @@
-function Set-RTTicketField {
-    <#
+﻿function Set-RTTicketField {
+	<#
     .SYNOPSIS
         Sets one or more fields on an RT ticket.
 
@@ -56,80 +56,80 @@ function Set-RTTicketField {
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [Alias('TicketId', 'numerical_id')]
-        [int]$Id,
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
+	[OutputType([PSCustomObject])]
+	param(
+		[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+		[Alias('TicketId', 'numerical_id')]
+		[int]$Id,
 
-        [hashtable]$Fields,
+		[hashtable]$Fields,
 
-        [hashtable]$CustomFields,
+		[hashtable]$CustomFields,
 
-        [switch]$Force,
+		[switch]$Force,
 
-        [switch]$PassThru
-    )
+		[switch]$PassThru
+	)
 
-    process {
-        # At least one of -Fields or -CustomFields must be supplied.
-        if ((-not $Fields -or $Fields.Count -eq 0) -and (-not $CustomFields -or $CustomFields.Count -eq 0)) {
-            $PSCmdlet.ThrowTerminatingError(
-                [System.Management.Automation.ErrorRecord]::new(
-                    [System.ArgumentException]::new("At least one of -Fields or -CustomFields must be provided."),
-                    'NoFieldsSpecified',
-                    [System.Management.Automation.ErrorCategory]::InvalidArgument,
-                    $null
-                )
-            )
-        }
+	process {
+		# At least one of -Fields or -CustomFields must be supplied.
+		if ((-not $Fields -or $Fields.Count -eq 0) -and (-not $CustomFields -or $CustomFields.Count -eq 0)) {
+			$PSCmdlet.ThrowTerminatingError(
+				[System.Management.Automation.ErrorRecord]::new(
+					[System.ArgumentException]::new("At least one of -Fields or -CustomFields must be provided."),
+					'NoFieldsSpecified',
+					[System.Management.Automation.ErrorCategory]::InvalidArgument,
+					$null
+				)
+			)
+		}
 
-        Write-Verbose "Fetching ticket #$Id"
-        $ticket = Get-RTTicket -Id $Id
+		Write-Verbose "Fetching ticket #$Id"
+		$ticket = Get-RTTicket -Id $Id
 
-        # Build confirmation prompt
-        $changeLines = [System.Collections.Generic.List[string]]::new()
+		# Build confirmation prompt
+		$changeLines = [System.Collections.Generic.List[string]]::new()
 
-        if ($Fields -and $Fields.Count -gt 0) {
-            foreach ($key in $Fields.Keys) {
-                $changeLines.Add("  $key = $($Fields[$key])")
-            }
-        }
+		if ($Fields -and $Fields.Count -gt 0) {
+			foreach ($key in $Fields.Keys) {
+				$changeLines.Add("  $key = $($Fields[$key])")
+			}
+		}
 
-        if ($CustomFields -and $CustomFields.Count -gt 0) {
-            foreach ($key in $CustomFields.Keys) {
-                $changeLines.Add("  [CF] $key = $($CustomFields[$key])")
-            }
-        }
+		if ($CustomFields -and $CustomFields.Count -gt 0) {
+			foreach ($key in $CustomFields.Keys) {
+				$changeLines.Add("  [CF] $key = $($CustomFields[$key])")
+			}
+		}
 
-        $promptText = "Ticket #$Id — $($ticket.Subject)`nFields to update:`n$($changeLines -join "`n")"
+		$promptText = "Ticket #$Id — $($ticket.Subject)`nFields to update:`n$($changeLines -join "`n")"
 
-        if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Update fields')) {
-            return
-        }
+		if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Update fields')) {
+			return
+		}
 
-        # Build request body
-        $requestBody = @{}
+		# Build request body
+		$requestBody = @{}
 
-        if ($Fields -and $Fields.Count -gt 0) {
-            foreach ($key in $Fields.Keys) {
-                $requestBody[$key] = $Fields[$key]
-            }
-        }
+		if ($Fields -and $Fields.Count -gt 0) {
+			foreach ($key in $Fields.Keys) {
+				$requestBody[$key] = $Fields[$key]
+			}
+		}
 
-        if ($CustomFields -and $CustomFields.Count -gt 0) {
-            $requestBody['CustomFields'] = $CustomFields
-        }
+		if ($CustomFields -and $CustomFields.Count -gt 0) {
+			$requestBody['CustomFields'] = $CustomFields
+		}
 
-        # Patch
-        Write-Verbose "Patching $($requestBody.Count) field(s) on ticket #$Id"
-        $null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body $requestBody
+		# Patch
+		Write-Verbose "Patching $($requestBody.Count) field(s) on ticket #$Id"
+		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body $requestBody
 
-        Write-Host "Ticket #$Id updated." -ForegroundColor Green
+		Write-Host "Ticket #$Id updated." -ForegroundColor Green
 
-        if ($PassThru) {
-            Get-RTTicket -Id $Id
-        }
-    }
+		if ($PassThru) {
+			Get-RTTicket -Id $Id
+		}
+	}
 }

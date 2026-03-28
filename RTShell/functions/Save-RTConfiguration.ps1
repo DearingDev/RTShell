@@ -1,5 +1,5 @@
-function Save-RTConfiguration {
-    <#
+﻿function Save-RTConfiguration {
+	<#
     .SYNOPSIS
         Persists the RT base URI and API token to ~/.rtshell/ for use in future
         sessions.
@@ -34,45 +34,45 @@ function Save-RTConfiguration {
     .OUTPUTS
         None.
     #>
-    [CmdletBinding(DefaultParameterSetName = 'SecureToken')]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$BaseUri,
+	[CmdletBinding(DefaultParameterSetName = 'SecureToken')]
+	param(
+		[Parameter(Mandatory)]
+		[ValidateNotNullOrEmpty()]
+		[string]$BaseUri,
 
-        [Parameter(Mandatory, ParameterSetName = 'SecureToken')]
-        [System.Security.SecureString]$Token,
+		[Parameter(Mandatory, ParameterSetName = 'SecureToken')]
+		[System.Security.SecureString]$Token,
 
-        [Parameter(Mandatory, ParameterSetName = 'PlainToken')]
-        [ValidateNotNullOrEmpty()]
-        [string]$TokenPlainText
-    )
+		[Parameter(Mandatory, ParameterSetName = 'PlainToken')]
+		[ValidateNotNullOrEmpty()]
+		[string]$TokenPlainText
+	)
 
-    $BaseUri = $BaseUri.TrimEnd('/')
+	$BaseUri = $BaseUri.TrimEnd('/')
 
-    # Convert PlainText to SecureString for the SecretManagement module if needed
-    if ($PSCmdlet.ParameterSetName -eq 'PlainToken') {
-        $Token = ConvertTo-SecureString -String $TokenPlainText -AsPlainText -Force
-    }
+	# Convert PlainText to SecureString for the SecretManagement module if needed
+	if ($PSCmdlet.ParameterSetName -eq 'PlainToken') {
+		$Token = ConvertTo-SecureString -String $TokenPlainText -AsPlainText -Force
+	}
 
-    # Load existing config to preserve queue cache if present
-    $existing = Get-RTConfig
-    $config   = @{
-        BaseUri        = $BaseUri
-        QueueCache     = if ($existing.QueueCache) { $existing.QueueCache } else { @() }
-        QueueCacheDate = if ($existing.QueueCacheDate) { $existing.QueueCacheDate } else { $null }
-    }
+	# Load existing config to preserve queue cache if present
+	$existing = Get-RTConfig
+	$config = @{
+		BaseUri        = $BaseUri
+		QueueCache     = if ($existing.QueueCache) { $existing.QueueCache } else { @() }
+		QueueCacheDate = if ($existing.QueueCacheDate) { $existing.QueueCacheDate } else { $null }
+	}
 
-    # Save non-secret config to disk
-    Save-RTConfig -Config $config
+	# Save non-secret config to disk
+	Save-RTConfig -Config $config
     
-    # Ensure a vault exists before trying to save
-    Initialize-RTSecretVault
+	# Ensure a vault exists before trying to save
+	Initialize-RTSecretVault
 
-    # Save the token to SecretManagement
-    Set-Secret -Name 'RTShell_Token' -Secret $Token -NoClobber:$false
+	# Save the token to SecretManagement
+	Set-Secret -Name 'RTShell_Token' -Secret $Token -NoClobber:$false
 
-    Write-Host "Configuration saved." -ForegroundColor Green
-    Write-Host "  BaseUri : $BaseUri (saved to ~/.rtshell/config.json)" -ForegroundColor Gray
-    Write-Host "  Token   : saved to SecretManagement vault as 'RTShell_Token'" -ForegroundColor Gray
+	Write-Host "Configuration saved." -ForegroundColor Green
+	Write-Host "  BaseUri : $BaseUri (saved to ~/.rtshell/config.json)" -ForegroundColor Gray
+	Write-Host "  Token   : saved to SecretManagement vault as 'RTShell_Token'" -ForegroundColor Gray
 }

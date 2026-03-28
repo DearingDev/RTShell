@@ -1,5 +1,5 @@
-function Set-RTTicketPriority {
-    <#
+﻿function Set-RTTicketPriority {
+	<#
     .SYNOPSIS
         Sets the priority of an RT ticket.
 
@@ -38,40 +38,40 @@ function Set-RTTicketPriority {
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [Alias('TicketId', 'numerical_id')]
-        [int]$Id,
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
+	[OutputType([PSCustomObject])]
+	param(
+		[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+		[Alias('TicketId', 'numerical_id')]
+		[int]$Id,
 
-        [Parameter(Mandatory)]
-        [ValidateRange(0, 100)]
-        [int]$Priority,
+		[Parameter(Mandatory)]
+		[ValidateRange(0, 100)]
+		[int]$Priority,
 
-        [switch]$Force,
+		[switch]$Force,
 
-        [switch]$PassThru
-    )
+		[switch]$PassThru
+	)
 
-    process {
-        Write-Verbose "Fetching ticket #$Id"
-        $ticket = Get-RTTicket -Id $Id
+	process {
+		Write-Verbose "Fetching ticket #$Id"
+		$ticket = Get-RTTicket -Id $Id
 
-        $currentPriority = if ($null -ne $ticket.Priority) { $ticket.Priority } else { 'unset' }
-        $promptText      = "Ticket #$Id — $($ticket.Subject)`nPriority: $currentPriority → $Priority"
+		$currentPriority = if ($null -ne $ticket.Priority) { $ticket.Priority } else { 'unset' }
+		$promptText = "Ticket #$Id — $($ticket.Subject)`nPriority: $currentPriority → $Priority"
 
-        if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Set priority')) {
-            return
-        }
+		if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Set priority')) {
+			return
+		}
 
-        Write-Verbose "Setting priority on ticket #$Id to $Priority"
-        $null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Priority = $Priority }
+		Write-Verbose "Setting priority on ticket #$Id to $Priority"
+		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Priority = $Priority }
 
-        Write-Host "Ticket #$Id priority set to $Priority." -ForegroundColor Green
+		Write-Host "Ticket #$Id priority set to $Priority." -ForegroundColor Green
 
-        if ($PassThru) {
-            Get-RTTicket -Id $Id
-        }
-    }
+		if ($PassThru) {
+			Get-RTTicket -Id $Id
+		}
+	}
 }

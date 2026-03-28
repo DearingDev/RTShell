@@ -1,5 +1,5 @@
-function New-RTTemplate {
-    <#
+﻿function New-RTTemplate {
+	<#
     .SYNOPSIS
         Creates a new response template in the RTShell templates directory.
 
@@ -74,62 +74,62 @@ function New-RTTemplate {
     .OUTPUTS
         None. Writes confirmation to host on success.
     #>
-    [CmdletBinding(SupportsShouldProcess)]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Name,
+	[CmdletBinding(SupportsShouldProcess)]
+	param(
+		[Parameter(Mandatory)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Name,
 
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Description,
+		[Parameter(Mandatory)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Description,
 
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Body,
+		[Parameter(Mandatory)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Body,
 
-        [string]$Subject,
+		[string]$Subject,
 
-        [hashtable]$Prompts = @{}
-    )
+		[hashtable]$Prompts = @{}
+	)
 
-    # Resolve template directory and file path
-    $templateDir  = Get-RTTemplateDirectory
-    $templatePath = Join-Path -Path $templateDir -ChildPath "$Name.json"
+	# Resolve template directory and file path
+	$templateDir = Get-RTTemplateDirectory
+	$templatePath = Join-Path -Path $templateDir -ChildPath "$Name.json"
 
-    # Guard: no overwrite
-    if (Test-Path -LiteralPath $templatePath) {
-        throw "A template named '$Name' already exists at '$templatePath'. Use Set-RTTemplate to update it."
-    }
+	# Guard: no overwrite
+	if (Test-Path -LiteralPath $templatePath) {
+		throw "A template named '$Name' already exists at '$templatePath'. Use Set-RTTemplate to update it."
+	}
 
-    # Confirmation
-    $promptCount = $Prompts.Count
-    $promptText  = "Template '$Name' — $Description"
-    if ($promptCount -gt 0) {
-        $promptText += " ($promptCount prompt token(s): $($Prompts.Keys -join ', '))"
-    }
+	# Confirmation
+	$promptCount = $Prompts.Count
+	$promptText = "Template '$Name' — $Description"
+	if ($promptCount -gt 0) {
+		$promptText += " ($promptCount prompt token(s): $($Prompts.Keys -join ', '))"
+	}
 
-    if (-not $PSCmdlet.ShouldProcess($promptText, 'Create response template')) {
-        return
-    }
+	if (-not $PSCmdlet.ShouldProcess($promptText, 'Create response template')) {
+		return
+	}
 
-    # Build template object
-    $newTemplate = @{
-        Name        = $Name
-        Description = $Description
-        Subject     = if ($PSBoundParameters.ContainsKey('Subject')) { $Subject } else { $null }
-        Body        = $Body
-        Prompts     = $Prompts
-    }
+	# Build template object
+	$newTemplate = @{
+		Name        = $Name
+		Description = $Description
+		Subject     = if ($PSBoundParameters.ContainsKey('Subject')) { $Subject } else { $null }
+		Body        = $Body
+		Prompts     = $Prompts
+	}
 
-    # Write file
-    $newTemplate | ConvertTo-Json -Depth 5 | Set-Content -Path $templatePath -Encoding UTF8
+	# Write file
+	$newTemplate | ConvertTo-Json -Depth 5 | Set-Content -Path $templatePath -Encoding UTF8
 
-    Write-Host "Response template '$Name' created at '$templatePath'." -ForegroundColor Green
+	Write-Host "Response template '$Name' created at '$templatePath'." -ForegroundColor Green
 
-    if ($Prompts.Count -gt 0) {
-        Write-Host "  Prompt tokens  : $($Prompts.Keys -join ', ')" -ForegroundColor Gray
-    }
-    Write-Host "  Use with       : Add-RTTicketReply -TemplateName '$Name'" -ForegroundColor Gray
-    Write-Host "                   Add-RTTicketComment -TemplateName '$Name'" -ForegroundColor Gray
+	if ($Prompts.Count -gt 0) {
+		Write-Host "  Prompt tokens  : $($Prompts.Keys -join ', ')" -ForegroundColor Gray
+	}
+	Write-Host "  Use with       : Add-RTTicketReply -TemplateName '$Name'" -ForegroundColor Gray
+	Write-Host "                   Add-RTTicketComment -TemplateName '$Name'" -ForegroundColor Gray
 }

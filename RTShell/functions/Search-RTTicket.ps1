@@ -1,4 +1,4 @@
-function Search-RTTicket {
+﻿function Search-RTTicket {
     <#
     .SYNOPSIS
         Searches for RT tickets using either structured parameters or a raw

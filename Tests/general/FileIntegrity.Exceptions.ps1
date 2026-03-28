@@ -32,10 +32,10 @@ $global:BannedCommands = @(
 	Insert the file names of files that may contain them.
 	
 	Example:
-	"Write-Host"  = @('Write-PSFHostColor.ps1','Write-PSFMessage.ps1')
+	"Write-Output"  = @('Write-PSFHostColor.ps1','Write-PSFMessage.ps1')
 #>
 $global:MayContainCommand = @{
-	"Write-Host"  = @()
+	"Write-Output"  = @()
 	"Write-Verbose" = @()
 	"Write-Warning" = @()
 	"Write-Error"  = @()

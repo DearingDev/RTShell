@@ -1,5 +1,5 @@
-function Set-RTTicketOwner {
-    <#
+﻿function Set-RTTicketOwner {
+	<#
     .SYNOPSIS
         Sets the owner of an RT ticket.
 
@@ -42,40 +42,40 @@ function Set-RTTicketOwner {
     .OUTPUTS
         None by default. With -PassThru, returns a RTShell.Ticket object.
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [Alias('TicketId', 'numerical_id')]
-        [int]$Id,
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
+	[OutputType([PSCustomObject])]
+	param(
+		[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+		[Alias('TicketId', 'numerical_id')]
+		[int]$Id,
 
-        [Parameter(Mandatory)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Owner,
+		[Parameter(Mandatory)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Owner,
 
-        [switch]$Force,
+		[switch]$Force,
 
-        [switch]$PassThru
-    )
+		[switch]$PassThru
+	)
 
-    process {
-        Write-Verbose "Fetching ticket #$Id"
-        $ticket = Get-RTTicket -Id $Id
+	process {
+		Write-Verbose "Fetching ticket #$Id"
+		$ticket = Get-RTTicket -Id $Id
 
-        $currentOwner = if ($ticket.Owner) { $ticket.Owner } else { 'Nobody' }
-        $promptText   = "Ticket #$Id — $($ticket.Subject)`nOwner: $currentOwner → $Owner"
+		$currentOwner = if ($ticket.Owner) { $ticket.Owner } else { 'Nobody' }
+		$promptText = "Ticket #$Id — $($ticket.Subject)`nOwner: $currentOwner → $Owner"
 
-        if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Set owner')) {
-            return
-        }
+		if (-not $Force -and -not $PSCmdlet.ShouldProcess($promptText, 'Set owner')) {
+			return
+		}
 
-        Write-Verbose "Setting owner on ticket #$Id to '$Owner'"
-        $null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Owner = $Owner }
+		Write-Verbose "Setting owner on ticket #$Id to '$Owner'"
+		$null = Invoke-RTWriteRequest -Path "ticket/$Id" -Method PATCH -Body @{ Owner = $Owner }
 
-        Write-Host "Ticket #$Id owner set to '$Owner'." -ForegroundColor Green
+		Write-Host "Ticket #$Id owner set to '$Owner'." -ForegroundColor Green
 
-        if ($PassThru) {
-            Get-RTTicket -Id $Id
-        }
-    }
+		if ($PassThru) {
+			Get-RTTicket -Id $Id
+		}
+	}
 }

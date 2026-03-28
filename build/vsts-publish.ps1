@@ -30,15 +30,15 @@ if (-not (Test-Path -Path $publishDir)) {
 
 if ($LocalRepo) {
 	# Dependencies must go first
-	Write-Host "Creating Nuget Package for module: PSFramework"
+	Write-Output "Creating Nuget Package for module: PSFramework"
 	New-PSMDModuleNugetPackage -ModulePath (Get-Module -Name PSFramework).ModuleBase -PackagePath .
-	Write-Host "Creating Nuget Package for module: RTShell"
+	Write-Output "Creating Nuget Package for module: RTShell"
 	New-PSMDModuleNugetPackage -ModulePath "$($publishDir)\RTShell" -PackagePath .
 	return
 }
 
 # Publish to Gallery
-Write-Host "Publishing the RTShell module to $($Repository)"
+Write-Output "Publishing the RTShell module to $($Repository)"
 $param = @{
 	Path       = "$($publishDir)\RTShell"
 	Force      = $true

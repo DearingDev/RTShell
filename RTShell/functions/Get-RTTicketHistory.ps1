@@ -1,4 +1,4 @@
-function Get-RTTicketHistory {
+﻿function Get-RTTicketHistory {
     <#
     .SYNOPSIS
         Retrieves the transaction history (comments, replies, status changes)
