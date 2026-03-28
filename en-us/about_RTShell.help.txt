@@ -1,0 +1,12 @@
+﻿TOPIC
+	about_RTShell
+	
+SHORT DESCRIPTION
+	A short synopsis of RTShell
+
+LONG DESCRIPTION
+	A more detailed description of RTShell,
+	Should tell the user how to get started with this module.
+	
+KEYWORDS
+	module development debugging
