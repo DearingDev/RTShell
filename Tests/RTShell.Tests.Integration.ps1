@@ -440,7 +440,7 @@ Describe 'Get-RTTicketHistory' {
 
     It 'Filters to Correspond type' {
         $history = @(Get-RTTicketHistory -Id $script:HistoryTestId -Type Correspond)
-        $nonCorrespond = $history | Where-Object { $_.PSTypeName -ne 'RTShell.TicketHistory.Summary' }
+        # $nonCorrespond = $history | Where-Object { $_.PSTypeName -ne 'RTShell.TicketHistory.Summary' }
         # All returned items should be from correspond transactions
         $history.Count | Should -BeGreaterOrEqual 1
     }
@@ -479,7 +479,7 @@ Describe 'Get-RTTicketAttachments / Save-RTTicketAttachment' {
         $attachments = Get-RTTicketAttachments -Id $script:RoundTripId |
                        Where-Object { $_.Filename -eq 'upload_roundtrip.txt' }
 
-        $saved = $attachments | Save-RTTicketAttachment -DestinationPath $destDir -Force
+        $attachments | Save-RTTicketAttachment -DestinationPath $destDir -Force
 
         $outFile = Join-Path $destDir 'upload_roundtrip.txt'
         $outFile                               | Should -Exist
