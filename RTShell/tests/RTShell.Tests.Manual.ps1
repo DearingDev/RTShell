@@ -17,25 +17,25 @@
 #>
 
 # ── Configuration ─────────────────────────────────────────────────────────────
-$RT_BASE_URI   = $env:RT_BASE_URI       ?? ''
-$RT_API_TOKEN  = $env:RT_API_TOKEN      ?? ''
-$RT_QUEUE      = $env:RT_TEST_QUEUE     ?? ''
-$RT_REQUESTOR  = $env:RT_TEST_REQUESTOR ?? ''
+$RT_BASE_URI = $env:RT_BASE_URI ?? ''
+$RT_API_TOKEN = $env:RT_API_TOKEN ?? ''
+$RT_QUEUE = $env:RT_TEST_QUEUE ?? 'General'
+$RT_REQUESTOR = $env:RT_TEST_REQUESTOR ?? ''
 
 if (-not $RT_BASE_URI) {
-    $RT_BASE_URI = Read-Host 'RT Base URI (e.g. https://rt.example.com)'
+	$RT_BASE_URI = Read-Host 'RT Base URI (e.g. https://rt.example.com)'
 }
 
 if (-not $RT_API_TOKEN) {
-    $RT_API_TOKEN = Read-Host 'RT API Token'
+	$RT_API_TOKEN = Read-Host 'RT API Token'
 }
 
 if (-not $RT_QUEUE) {
-    $RT_QUEUE = Read-Host 'RT Queue for testing (e.g. General)'
+	$RT_QUEUE = Read-Host 'RT Queue for testing (e.g. General)'
 }
 
 if (-not $RT_REQUESTOR) {
-    $RT_REQUESTOR = Read-Host 'Requestor email for test tickets (e.g. testuser@example.com)'
+	$RT_REQUESTOR = Read-Host 'Requestor email for test tickets (e.g. testuser@example.com)'
 }
 
 # Track IDs so we can clean up
@@ -43,14 +43,14 @@ $createdIds = [System.Collections.Generic.List[int]]::new()
 
 # ─────────────────────────────────────────────────────────────────────────────
 Write-Host "`n═══════════════════════════════════" -ForegroundColor Cyan
-Write-Host ' RTShell Manual Test Script'          -ForegroundColor Cyan
+Write-Host ' RTShell Manual Test Script' -ForegroundColor Cyan
 Write-Host "═══════════════════════════════════`n" -ForegroundColor Cyan
 
 # ── 0. Import module ──────────────────────────────────────────────────────────
 Write-Host '[0] Import-Module' -ForegroundColor Yellow
-Import-Module .\RTShell.psd1 -Force
+Import-Module (Join-Path $PSScriptRoot '..\RTShell.psd1') -Force
 Get-Command -Module RTShell | Measure-Object | ForEach-Object {
-    Write-Host "    Loaded $($_.Count) exported commands." -ForegroundColor Gray
+	Write-Host "    Loaded $($_.Count) exported commands." -ForegroundColor Gray
 }
 
 # ── 1. Connect ────────────────────────────────────────────────────────────────
@@ -84,11 +84,11 @@ Write-Host "    Total tickets in queue: $($allTickets.Count)" -ForegroundColor G
 # ── 4. New-RTTicket ───────────────────────────────────────────────────────────
 Write-Host "`n[4] New-RTTicket" -ForegroundColor Yellow
 $t1 = New-RTTicket -Queue $RT_QUEUE `
-    -Subject    '[RTShell Manual Test] Basic ticket' `
-    -Requestor  $RT_REQUESTOR `
-    -Body       'This ticket was created by the RTShell manual test script.' `
-    -Priority 30 `
-    -Force -PassThru
+	-Subject '[RTShell Manual Test] Basic ticket' `
+	-Requestor $RT_REQUESTOR `
+	-Body 'This ticket was created by the RTShell manual test script.' `
+	-Priority 30 `
+	-Force -PassThru
 
 $createdIds.Add($t1.Id)
 Write-Host "    Created ticket #$($t1.Id): $($t1.Subject)" -ForegroundColor Gray
@@ -163,10 +163,10 @@ $tplName = 'manual-test-tpl'
 
 Write-Host "    New-RTTemplate" -ForegroundColor Gray
 New-RTTemplate -Name $tplName `
-    -Description 'RTShell manual test template' `
-    -Body        "Hi {{RequestorName}},`n`nTicket #{{TicketId}} is in queue {{Queue}}.`nCustom: {{MyValue}}" `
-    -Prompts     @{ MyValue = 'Enter a custom value' } `
-    -Confirm:$false
+	-Description 'RTShell manual test template' `
+	-Body "Hi {{RequestorName}},`n`nTicket #{{TicketId}} is in queue {{Queue}}.`nCustom: {{MyValue}}" `
+	-Prompts @{ MyValue = 'Enter a custom value' } `
+	-Confirm:$false
 
 Write-Host "    Get-RTTemplate (list)" -ForegroundColor Gray
 Get-RTTemplate | Format-Table Name, Description, PromptCount -AutoSize
@@ -180,7 +180,7 @@ Get-RTTemplate -Name $tplName | Format-Table Name, Description
 
 Write-Host "    Add-RTTicketReply with template (scripted -TemplateValues)" -ForegroundColor Gray
 Add-RTTicketReply -Id $t1.Id -TemplateName $tplName `
-    -TemplateValues @{ MyValue = 'Hello from TemplateValues' } -Force
+	-TemplateValues @{ MyValue = 'Hello from TemplateValues' } -Force
 
 $history2 = @(Get-RTTicketHistory -Id $t1.Id -Type Correspond)
 Write-Host "    History entry count after template reply: $($history2.Count)" -ForegroundColor Gray
@@ -194,7 +194,7 @@ Write-Host "    Template '$tplName' exists after removal: $($remaining.Count -gt
 # ── 14. Add-RTTicketAttachment ────────────────────────────────────────────────
 Write-Host "`n[14] Add-RTTicketAttachment" -ForegroundColor Yellow
 
-$tempDir  = [System.IO.Path]::GetTempPath()
+$tempDir = [System.IO.Path]::GetTempPath()
 $tempFile = Join-Path $tempDir 'rtshell_manual_test.txt'
 Set-Content -Path $tempFile -Value "RTShell manual test attachment`nCreated: $(Get-Date)"
 Add-RTTicketAttachment -Id $t1.Id -Path $tempFile -Comment 'Uploaded by manual test script' -Force
@@ -214,28 +214,31 @@ Get-ChildItem $downloadDir | Format-Table Name, Length, LastWriteTime -AutoSize
 # ── 16. Set-RTTicketQueue (if a second queue exists) ─────────────────────────
 Write-Host "`n[16] Set-RTTicketQueue" -ForegroundColor Yellow
 $secondQueue = $queues | Where-Object { $_.Name -ine $RT_QUEUE -and -not $_.Disabled } |
-               Select-Object -First 1
+	Select-Object -First 1
 if ($secondQueue) {
-    Write-Host "    Moving ticket to '$($secondQueue.Name)' then back..." -ForegroundColor Gray
-    Set-RTTicketQueue -Id $t1.Id -Queue $secondQueue.Name -Force
-    Set-RTTicketQueue -Id $t1.Id -Queue $RT_QUEUE        -Force
-    Write-Host "    Queue round-trip complete." -ForegroundColor Gray
-} else {
-    Write-Host "    Only one queue available — skipping queue move test." -ForegroundColor Gray
+	Write-Host "    Moving ticket to '$($secondQueue.Name)' then back..." -ForegroundColor Gray
+	Set-RTTicketQueue -Id $t1.Id -Queue $secondQueue.Name -Force
+	Set-RTTicketQueue -Id $t1.Id -Queue $RT_QUEUE -Force
+	Write-Host "    Queue round-trip complete." -ForegroundColor Gray
+}
+else {
+	Write-Host "    Only one queue available — skipping queue move test." -ForegroundColor Gray
 }
 
 # ── 17. Get-RTUser ────────────────────────────────────────────────────────────
 Write-Host "`n[17] Get-RTUser" -ForegroundColor Yellow
 # Fetch the owner of the first open ticket if one exists
 $ownerName = if ($openTickets -and $openTickets[0].Owner -and $openTickets[0].Owner -ne 'Nobody') {
-    $openTickets[0].Owner
-} else { $null }
+	$openTickets[0].Owner
+}
+else { $null }
 
 if ($ownerName) {
-    Get-RTUser -Name $ownerName | Format-List
-    Get-RTUser -Name $ownerName -Detailed | Format-List
-} else {
-    Write-Host "    No owned tickets found for user lookup test — skipping." -ForegroundColor Gray
+	Get-RTUser -Name $ownerName | Format-List
+	Get-RTUser -Name $ownerName -Detailed | Format-List
+}
+else {
+	Write-Host "    No owned tickets found for user lookup test — skipping." -ForegroundColor Gray
 }
 
 # ── 18. Pipelining ────────────────────────────────────────────────────────────
@@ -245,7 +248,7 @@ Write-Host "    Pipeline returned $($pipeResult.Count) full ticket object(s)" -F
 
 Write-Host "`n[18b] Pipeline: Search | Set-RTTicketPriority (on our test ticket only)" -ForegroundColor Yellow
 Search-RTTicket -Query "id=$($t1.Id)" |
-    Set-RTTicketPriority -Priority 55 -Force
+	Set-RTTicketPriority -Priority 55 -Force
 $check = Get-RTTicket -Id $t1.Id -Detailed
 Write-Host "    Priority via pipeline: $($check.Priority)" -ForegroundColor Gray
 
@@ -257,8 +260,8 @@ Write-Host "    Cache updated." -ForegroundColor Gray
 # ── 20. Cleanup ───────────────────────────────────────────────────────────────
 Write-Host "`n[20] Cleanup — resolving test tickets" -ForegroundColor Yellow
 foreach ($id in $createdIds) {
-    Set-RTTicketStatus -Id $id -Status resolved -Force
-    Write-Host "    Resolved ticket #$id" -ForegroundColor Gray
+	Set-RTTicketStatus -Id $id -Status resolved -Force
+	Write-Host "    Resolved ticket #$id" -ForegroundColor Gray
 }
 
 # ── 21. Disconnect ────────────────────────────────────────────────────────────
@@ -266,8 +269,8 @@ Write-Host "`n[21] Disconnect-RT" -ForegroundColor Yellow
 Disconnect-RT
 # Expected: "Disconnected from RT." yellow message
 
-Write-Host "`n═══════════════════════════════════"  -ForegroundColor Green
-Write-Host ' Manual test run complete.'             -ForegroundColor Green
+Write-Host "`n═══════════════════════════════════" -ForegroundColor Green
+Write-Host ' Manual test run complete.' -ForegroundColor Green
 Write-Host "═══════════════════════════════════`n" -ForegroundColor Green
 
 # ── Manual checklist ──────────────────────────────────────────────────────────
