@@ -104,7 +104,7 @@
 			
 			# ReleaseNotes of this module
 			ReleaseNotes = @'
-0.1.0 - Initial release with core functionality for connecting to RT, managing tickets, and handling response templates.
+0.1.1 - Correcting issue that caused Import-Module to fail.
 '@
 			
 		} # End of PSData hashtable
