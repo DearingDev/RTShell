@@ -3,7 +3,7 @@
 	RootModule        = 'RTShell.psm1'
 	
 	# Version number of this module.
-	ModuleVersion     = '0.1.1'
+	ModuleVersion     = '0.1.2'
 	
 	# ID used to uniquely identify this module
 	GUID              = 'ec49fac6-1b1c-4776-bab1-f9466887fc28'
@@ -104,7 +104,7 @@
 			
 			# ReleaseNotes of this module
 			ReleaseNotes = @'
-0.1.1 - Correcting issue that caused Import-Module to fail.
+0.1.2 - Correcting issue that caused Import-Module to fail.
 '@
 			
 		} # End of PSData hashtable
