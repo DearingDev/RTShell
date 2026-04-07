@@ -265,7 +265,11 @@
                 Subject     = $item.Subject
                 Status      = $item.Status
                 Queue       = if ($item.Queue.Name) { $item.Queue.Name }
-                              elseif ($item.Queue.id) { $item.Queue.id }
+                              elseif ($item.Queue.id) {
+                                  $queueId   = $item.Queue.id
+                                  $cached    = $Script:RTSession.QueueCache | Where-Object { $_.Id -eq $queueId } | Select-Object -First 1
+                                  if ($cached) { $cached.Name } else { $queueId }
+                              }
                               else { $null }
                 Owner       = if ($item.Owner.id)   { $item.Owner.id }
                               elseif ($item.Owner -is [string]) { $item.Owner }
