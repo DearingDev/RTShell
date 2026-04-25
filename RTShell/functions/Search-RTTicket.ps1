@@ -274,8 +274,8 @@
                 Owner       = if ($item.Owner.id)   { $item.Owner.id }
                               elseif ($item.Owner -is [string]) { $item.Owner }
                               else { $null }
-                Created     = if ($item.Created)     { try { [datetime]$item.Created }     catch { $null } } else { $null }
-                LastUpdated = if ($item.LastUpdated) { try { [datetime]$item.LastUpdated } catch { $null } } else { $null }
+                Created     = if ($item.Created)     { try { [datetime]::SpecifyKind([datetime]$item.Created,     [System.DateTimeKind]::Utc) } catch { $null } } else { $null }
+                LastUpdated = if ($item.LastUpdated) { try { [datetime]::SpecifyKind([datetime]$item.LastUpdated, [System.DateTimeKind]::Utc) } catch { $null } } else { $null }
             }
             $obj
             # Add numerical_id alias so Get-RTTicket can consume via pipeline
