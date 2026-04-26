@@ -63,7 +63,7 @@
                 param($val)
                 if (-not $val) { return $null }
                 try {
-                    $dt = [datetime]$val
+                    $dt = [datetime]::SpecifyKind([datetime]$val, [System.DateTimeKind]::Utc)
                     if ($dt.Year -le 1970) { return $null }
                     return $dt
                 }
