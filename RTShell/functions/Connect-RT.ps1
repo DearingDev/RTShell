@@ -71,20 +71,24 @@
 			throw "No saved configuration found. Run Save-RTConfiguration first."
 		}
 		$BaseUri = $config.BaseUri
+		$secretName = if ($config.TokenName) { $config.TokenName } else { 'RTShell_Token' }
 
 		try {
-			$TokenPlainText = Get-Secret -Name 'RTShell_Token' -AsPlainText -ErrorAction Stop
+			$TokenPlainText = Get-Secret -Name $secretName -AsPlainText -ErrorAction Stop
 		}
 		catch {
-			throw "Could not retrieve 'RTShell_Token' from SecretManagement. Make sure your vault is unlocked or run Save-RTConfiguration to save your token."
+			throw "Could not retrieve '$secretName' from SecretManagement. Make sure your vault is unlocked or run Save-RTConfiguration to save your token."
 		}
 	}
 	elseif ($PSCmdlet.ParameterSetName -eq 'FromConfig' -and $BaseUri) {
+		$config = Get-RTConfig
+		$secretName = if ($config -and $config.TokenName) { $config.TokenName } else { 'RTShell_Token' }
+
 		try {
-			$TokenPlainText = Get-Secret -Name 'RTShell_Token' -AsPlainText -ErrorAction Stop
+			$TokenPlainText = Get-Secret -Name $secretName -AsPlainText -ErrorAction Stop
 		}
 		catch {
-			throw "No token provided and could not retrieve 'RTShell_Token' from SecretManagement."
+			throw "No token provided and could not retrieve '$secretName' from SecretManagement."
 		}
 	}
 	elseif ($PSCmdlet.ParameterSetName -eq 'SecureToken') {

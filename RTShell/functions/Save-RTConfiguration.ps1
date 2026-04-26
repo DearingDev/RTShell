@@ -7,7 +7,7 @@
     .DESCRIPTION
         Saves connection details to disk so Connect-RT can be called without
         parameters. Config is stored in:
-          ~/.rtshell/config.json  -- BaseUri and queue cache (no secrets)
+          ~/.rtshell/config.json  -- BaseUri, token name, and queue cache (no secrets)
 
         Once saved, Connect-RT can be called with no parameters:
           Connect-RT
@@ -24,6 +24,11 @@
     .PARAMETER TokenPlainText
         API token as plain text. Useful for scripting/CI environments.
 
+    .PARAMETER TokenName
+        The name under which the API token is stored in the SecretManagement vault.
+        Defaults to 'RTShell_Token'. Change this if you prefer a different name or
+        manage multiple RT instances.
+
     .EXAMPLE
         $tok = Read-Host -AsSecureString -Prompt 'RT API Token'
         Save-RTConfiguration -BaseUri 'https://rt.example.com' -Token $tok
@@ -31,9 +36,9 @@
         Save configuration using a secure string token.
 
     .EXAMPLE
-        Save-RTConfiguration -BaseUri 'https://rt.example.com' -TokenPlainText $env:RT_TOKEN
+        Save-RTConfiguration -BaseUri 'https://rt.example.com' -TokenPlainText $env:RT_TOKEN -TokenName 'MyRT_Token'
 
-        Save configuration using a plain text token from an environment variable.
+        Save configuration using a plain text token with a custom vault secret name.
 
     .OUTPUTS
         None.
@@ -50,7 +55,11 @@
 
 		[Parameter(Mandatory, ParameterSetName = 'PlainToken')]
 		[ValidateNotNullOrEmpty()]
-		[string]$TokenPlainText
+		[string]$TokenPlainText,
+
+		[Parameter()]
+		[ValidateNotNullOrEmpty()]
+		[string]$TokenName = 'RTShell_Token'
 	)
 
 	$BaseUri = $BaseUri.TrimEnd('/')
@@ -65,6 +74,7 @@
 	$existing = Get-RTConfig
 	$config = @{
 		BaseUri        = $BaseUri
+		TokenName      = $TokenName
 		QueueCache     = if ($existing.QueueCache) { $existing.QueueCache } else { @() }
 		QueueCacheDate = if ($existing.QueueCacheDate) { $existing.QueueCacheDate } else { $null }
 	}
@@ -76,9 +86,9 @@
 	Initialize-RTSecretVault
 
 	# Save the token to SecretManagement
-	Set-Secret -Name 'RTShell_Token' -Secret $Token -NoClobber:$false
+	Set-Secret -Name $TokenName -Secret $Token -NoClobber:$false
 
 	Write-Information "Configuration saved." -InformationAction Continue
-	Write-Information "  BaseUri : $BaseUri (saved to ~/.rtshell/config.json)" -InformationAction Continue
-	Write-Information "  Token   : saved to SecretManagement vault as 'RTShell_Token'" -InformationAction Continue
+	Write-Information "  BaseUri    : $BaseUri (saved to ~/.rtshell/config.json)" -InformationAction Continue
+	Write-Information "  Token      : saved to SecretManagement vault as '$TokenName'" -InformationAction Continue
 }
