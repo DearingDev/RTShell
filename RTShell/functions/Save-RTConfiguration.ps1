@@ -29,6 +29,11 @@
         Defaults to 'RTShell_Token'. Change this if you prefer a different name or
         manage multiple RT instances.
 
+    .PARAMETER VaultName
+        The name of the SecretManagement vault to store the token in. If omitted,
+        SecretManagement's default vault is used. Useful when multiple vaults are
+        registered and you want to target a specific one.
+
     .EXAMPLE
         $tok = Read-Host -AsSecureString -Prompt 'RT API Token'
         Save-RTConfiguration -BaseUri 'https://rt.example.com' -Token $tok
@@ -39,6 +44,11 @@
         Save-RTConfiguration -BaseUri 'https://rt.example.com' -TokenPlainText $env:RT_TOKEN -TokenName 'MyRT_Token'
 
         Save configuration using a plain text token with a custom vault secret name.
+
+    .EXAMPLE
+        Save-RTConfiguration -BaseUri 'https://rt.example.com' -Token $tok -VaultName 'BobbuVault'
+
+        Save configuration targeting a specific SecretManagement vault.
 
     .OUTPUTS
         None.
@@ -59,7 +69,11 @@
 
 		[Parameter()]
 		[ValidateNotNullOrEmpty()]
-		[string]$TokenName = 'RTShell_Token'
+		[string]$TokenName = 'RTShell_Token',
+
+		[Parameter()]
+		[ValidateNotNullOrEmpty()]
+		[string]$VaultName
 	)
 
 	$BaseUri = $BaseUri.TrimEnd('/')
@@ -75,6 +89,7 @@
 	$config = @{
 		BaseUri        = $BaseUri
 		TokenName      = $TokenName
+		VaultName      = if ($PSBoundParameters.ContainsKey('VaultName')) { $VaultName } else { $existing.VaultName }
 		QueueCache     = if ($existing.QueueCache) { $existing.QueueCache } else { @() }
 		QueueCacheDate = if ($existing.QueueCacheDate) { $existing.QueueCacheDate } else { $null }
 	}
@@ -86,9 +101,12 @@
 	Initialize-RTSecretVault
 
 	# Save the token to SecretManagement
-	Set-Secret -Name $TokenName -Secret $Token -NoClobber:$false
+	$setSecretParams = @{ Name = $TokenName; Secret = $Token; NoClobber = $false }
+	if ($PSBoundParameters.ContainsKey('VaultName')) { $setSecretParams['Vault'] = $VaultName }
+	Set-Secret @setSecretParams
 
 	Write-Information "Configuration saved." -InformationAction Continue
 	Write-Information "  BaseUri    : $BaseUri (saved to ~/.rtshell/config.json)" -InformationAction Continue
-	Write-Information "  Token      : saved to SecretManagement vault as '$TokenName'" -InformationAction Continue
+	$vaultDisplay = if ($PSBoundParameters.ContainsKey('VaultName')) { $VaultName } else { '(default vault)' }
+	Write-Information "  Token      : saved to SecretManagement vault '$vaultDisplay' as '$TokenName'" -InformationAction Continue
 }
