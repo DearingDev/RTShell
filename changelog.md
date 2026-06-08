@@ -16,3 +16,8 @@
 
 + Dates now properly return as UTC.
 + Added option to select a different token name and store it in the config.json
+
+## 0.1.5 (2026-06-07)
+
++ Added -VaultName parameter to Save-RTConfiguration to target a specific SecretManagement vault.
++ Connect-RT now reads VaultName from config.json and passes -Vault to Get-Secret when set.
